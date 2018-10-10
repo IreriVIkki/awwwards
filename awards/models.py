@@ -116,8 +116,9 @@ class Followers(models.Model):
         self.follower = current_user
         self.save()
 
-    def unfollow_user(self, user):
-        fol = Followers.objects.get(follower=user)
+    @classmethod
+    def unfollow_user(cls, user):
+        fol = cls.objects.get(follower=user)
         fol.delete()
 
     def __str__(self):
@@ -141,7 +142,8 @@ class Comment(models.Model):
 
 
 class Collection(models.Model):
-    pass
+    user = models.ForeignKey(User, related_name='collections')
+    post = models.ForeignKey(Post)
 
 
 class PostLikes(models.Model):
