@@ -44,6 +44,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- Actual navigation bar which is hella functional -->
+        <div>
+            <nav class="nav border-top border-dark">
+                <div class="container-fluid px-0 d-flex justify-content-between nav-border text-white-50">
+                    <div id="menu-toogle" class="d-flex align-items-center w-25 pl-4">
+                        <span class="mr-2">
+                            <img id="img-icon" src="{% static 'img/meubars.png' %}" alt="">
+                        </span>
+                        <h6 class="mb-0 pr-4 f-12">MENU</h6>
+                        <div class="pl-4 h-100 border-left border-dark d-flex align-items-center">
+                            <a class="mb-0" id="search-button">
+                                <img id="img-icon" src="{% static 'img/search.png' %}" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div id="center" class="d-flex align-items-center">
+                        <a class="nav-link " href="">
+                            <h2 class="mb-0 txt-lightgrey title">AWWWARDS.</h2>
+                        </a>
+                    </div>
+                    <div id="login-submit" class="d-flex align-items-center w-25">
+                        <a class="f-12 font-weight-bold mr-3 ml-auto">REGISTER / LOGIN</a>
+                        <a class="f-12 font-weight-bold px-4 h-100 btn-blue d-flex align-items-center text-light">SUBMIT
+                            YOUR SITE</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
     </section>
     {% block content %}
 
