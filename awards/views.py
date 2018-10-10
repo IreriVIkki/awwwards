@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib import auth, messages
+from .forms import MyRegistrationForm
 import datetime
 
 # Create your views here.
@@ -43,3 +44,19 @@ def profile(request):
         return redirect("login")
     user = get_object_or_404(User, id=request.user.id)
     return render(request, 'profile.html', {'user': user})
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = MyRegistrationForm(request.POST)
+        if form.is_valid():
+            print('here')
+            form.save()
+            return redirect('login')
+
+    form = MyRegistrationForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'register.html', context)

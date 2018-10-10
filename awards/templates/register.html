@@ -1,0 +1,37 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="row p-0 m-0">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+
+        <h4>Login</h4>
+        <hr>
+
+        {% if messages %}
+        {% for message in messages %}
+        <p class="alert alert-info">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ form }}
+
+            <button type="submit">Register</button>
+
+        </form>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-6">
+        <h4>Don't Want to register</h4>
+        <p>
+            <a href="{% url 'home' %}">Continue</a>
+        </p>
+    </div>
+
+</div>
+{% endblock content %}
