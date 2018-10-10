@@ -23,7 +23,7 @@ def login(request):
         if user is not None:
             # correct username and password login the user
             auth.login(request, user)
-            return redirect('user_details')
+            return redirect('profile')
 
         # else:
         #     messages.error(request, 'Error wrong username/password')
