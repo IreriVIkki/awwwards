@@ -103,7 +103,25 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-        return self.caption
+        return self.name
+
+
+class Followers(models.Model):
+    follower = models.ForeignKey(User, related_name='followers', null=True)
+    following = models.ForeignKey(User, related_name='following', null=True)
+    followed_on = models.DateTimeField(auto_now_add=True)
+
+    def follow_user(self, current_user, user_other):
+        self.following = user_other
+        self.follower = current_user
+        self.save()
+
+    def unfollow_user(self, user):
+        fol = Followers.objects.get(follower=user)
+        fol.delete()
+
+    def __str__(self):
+        return f'{self.follower.username} is now following {self.following.username}'
 
 
 class tags(models.Model):
