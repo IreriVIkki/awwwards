@@ -1,0 +1,4 @@
+*.pyc
+virtual/
+db.sqlite3
+.vscode/
