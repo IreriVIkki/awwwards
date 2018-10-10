@@ -126,7 +126,8 @@ class Followers(models.Model):
 
 
 class tags(models.Model):
-    pass
+    user = models.ForeignKey(User, related_name='tags')
+    post = models.ForeignKey(Post)
 
 
 class technologies(models.Model):
