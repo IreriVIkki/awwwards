@@ -41,6 +41,20 @@ class Profile(models.Model):
         db_table = 'userprofile'
 
 
+class Location(models.Model):
+    country = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=50, null=True)
+    zipcode = models.IntegerField(null=True)
+    address = models.IntegerField(null=True)
+    location = models.CharField(default=locat)
+
+    def locat(self):
+        return f'{self.address}-{self.zipcode}, {(self.state).capitalize()}, {(self.country).capitalize()}'
+
+    def __str__(self):
+        return self.location
+
+
 class Post(models.Model):
     uploaded_by = models.ForeignKey(User, null=True, related_name='posts')
     name = models.CharField(min_length=200, null=True)
@@ -79,8 +93,9 @@ class Post(models.Model):
     def filter_by_search_term(cls, search_term):
         return cls.objects.filter(description__icontains=search_term)
 
-    def get_user_profile(self, post):
-        posts = Post.objects.filter(uploaded_by=post.uploaded_by)
+    @classmethod
+    def get_user_profile(cls, post):
+        posts = cls.objects.filter(uploaded_by=post.uploaded_by)
         return posts
 
     def save_post(self, user):
