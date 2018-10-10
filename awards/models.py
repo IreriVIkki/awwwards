@@ -42,7 +42,53 @@ class Profile(models.Model):
 
 
 class Post(models.Model):
-    pass
+    uploaded_by = models.ForeignKey(User, null=True, related_name='posts')
+    name = models.CharField(min_length=200, null=True)
+    landing_image = models.ImageField(upload_to='site-images/', null=True)
+    screenshot_1 = models.ImageField(upload_to='site-images/', null=True)
+    screenshot_2 = models.ImageField(upload_to='site-images/', null=True)
+    screenshot_3 = models.ImageField(upload_to='site-images/', null=True)
+    screenshot_4 = models.ImageField(upload_to='site-images/', null=True)
+    description = models.TextField(blank=True)
+    site_link = models.CharField(max_length=200, null=True)
+    location = models.ManyToManyField(Location, blank=True)
+    post_date = models.DateTimeField(auto_now_add=True)
+    usability = models.FloatField(default=0.00, null=True)
+    design = models.FloatField(default=0.00, null=True)
+    creativity = models.FloatField(default=0.00, null=True)
+    content = models.FloatField(default=0.00, null=True)
+    mobile = models.FloatField(default=0.00, null=True)
+    is_sotd = models.BooleanField(default=False)
+    is_hm = models.BooleanField(default=False)
+    is_soty = models.BooleanField(default=False)
+    is_mow = models.BooleanField(default=False)
+    is_ds = models.BooleanField(default=False)
+
+    @classmethod
+    def all_posts(cls):
+        all_posts = cls.objects.all()
+        return all_posts
+
+    @classmethod
+    def user_posts(cls, user_name):
+        user = User.objects.filter(username=user_name)[0]
+        posts = cls.objects.filter(uploaded_by=user)
+        return posts
+
+    @classmethod
+    def filter_by_search_term(cls, search_term):
+        return cls.objects.filter(description__icontains=search_term)
+
+    def get_user_profile(self, post):
+        posts = Post.objects.filter(uploaded_by=post.uploaded_by)
+        return posts
+
+    def save_post(self, user):
+        self.uploaded_by = user
+        self.save()
+
+    def __str__(self):
+        return self.caption
 
 
 class tags(models.Model):
@@ -65,7 +111,7 @@ class Collection(models.Model):
     pass
 
 
-class PhotoLikes(models.Model):
+class PostLikes(models.Model):
     pass
 
 
