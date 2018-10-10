@@ -131,7 +131,8 @@ class tags(models.Model):
 
 
 class technologies(models.Model):
-    pass
+    user = models.ForeignKey(User, related_name='technologies')
+    post = models.ForeignKey(Post)
 
 
 class Rating(models.Model):
