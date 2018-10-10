@@ -1,7 +1,7 @@
 from django.shortcuts import HttpResponse, render, redirect, get_object_or_404, reverse, get_list_or_404
 from django.core.mail import mail_admins
 from django.contrib.auth.models import User
-from django.contrib import auth
+from django.contrib import auth, messages
 import datetime
 
 # Create your views here.
@@ -25,8 +25,8 @@ def login(request):
             auth.login(request, user)
             return redirect('profile')
 
-        # else:
-        #     messages.error(request, 'Error wrong username/password')
+        else:
+            messages.error(request, 'Error wrong username/password')
 
     return render(request, 'login.html')
 
