@@ -33,9 +33,11 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
-    return render(request, 'index.html')
+    return redirect('login')
 
 
 def profile(request):
+    if not request.user.is_authenticated():
+        return redirect("login")
     user = get_object_or_404(User, id=request.user.id)
     return render(request, 'profile.html', {'user': user})

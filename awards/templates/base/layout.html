@@ -61,12 +61,20 @@
                         </div>
                     </div>
                     <div id="center" class="d-flex align-items-center">
-                        <a class="nav-link " href="">
+                        <a class="nav-link " href="{% url 'home' %}">
                             <h2 class="mb-0 txt-lightgrey title">AWWWARDS.</h2>
                         </a>
                     </div>
                     <div id="login-submit" class="d-flex align-items-center w-25">
-                        <a class="f-12 font-weight-bold mr-3 ml-auto">REGISTER / LOGIN</a>
+                        {% if user.is_authenticated %}
+                        <a class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50" href="{% url 'profile'%}">profile</a>
+                        <a class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50" href="{% url 'logout'%}">logout</a>
+
+                        {% else %}
+                        <a href="{% url 'login' }}" class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50">REGISTER
+                            /
+                            LOGIN</a>
+                        {% endif %}
                         <a class="f-12 font-weight-bold px-4 h-100 btn-blue d-flex align-items-center text-light">SUBMIT
                             YOUR SITE</a>
                     </div>
