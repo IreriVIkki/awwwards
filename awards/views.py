@@ -111,19 +111,29 @@ def rate_website(request, post_id):
         p_user = post.uploaded_by
         if request.method == 'POST':
             rf = RatePostForm(request.POST)
+            cf = ReviewCommentForm(request.POST)
             print(rf.is_valid())
+            print(cf.is_valid())
             if rf.is_valid():
                 rf.save()
                 rating = Rating.objects.last()
                 rating.user = user
                 rating.post = post
                 rating.save()
-                return redirect('home')
+            if cf.is_valid():
+                cf.save()
+                review = Comment.objects.last()
+                review.author = user
+                review.post = post
+                review.save()
+            return redirect('home')
         else:
             rf = RatePostForm()
+            cf = ReviewCommentForm()
 
         context = {
             'rf_form': rf,
+            'cf_form': cf,
             'p_user': p_user,
             'user': user,
             'post': post

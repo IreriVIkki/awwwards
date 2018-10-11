@@ -41,12 +41,25 @@
         </div>
     </div>
 
+    {% for review in post.comments.all %}
+    <p>{{ review.review }}</p>
+    {% endfor %}
+
+
+    {% for rating in post.ratings.all %}
+    <p>iterate</p>
+    {% endfor %}
+
     <form method="post" enctype="multipart/form-data">
 
         {% csrf_token %}
 
         {{ rf_form.as_p }}
-        <button type="submit">Upload</button>
+
+        <br><br><br><br>
+
+        {{ cf_form.as_p }}
+        <button type="submit">Post Review</button>
     </form>
 
     <div class="col-lg-6 col-md-6 col-sm-6">

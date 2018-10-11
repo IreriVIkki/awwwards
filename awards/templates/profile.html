@@ -9,6 +9,12 @@
 
         <h4>Account Details</h4>
 
+        {% if user.is_superuser %}
+
+        <a href="http://127.0.0.1:8000/admin/">admin</a>
+
+        {% endif %}
+
         <a href="{% url 'edit_profile' %}"></a>
 
         <hr>

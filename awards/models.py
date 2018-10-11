@@ -117,50 +117,57 @@ class Rating(models.Model):
         print(rating)
         return rating
 
-    def average_usability(self, post):
-        post_ratings = self.objects.filter(post=post)
+    @classmethod
+    def average_usability(cls, post):
+        post_ratings = cls.objects.filter(post=post)
         _all = [ur.usability for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    def average_design(self, post):
-        post_ratings = self.objects.filter(post=post)
+    @classmethod
+    def average_design(cls, post):
+        post_ratings = cls.objects.filter(post=post)
         _all = [ur.design for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    def average_creativity(self, post):
-        post_ratings = self.objects.filter(post=post)
+    @classmethod
+    def average_creativity(cls, post):
+        post_ratings = cls.objects.filter(post=post)
         _all = [ur.creativity for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    def average_content(self, post):
-        post_ratings = self.objects.filter(post=post)
+    @classmethod
+    def average_content(cls, post):
+        post_ratings = cls.objects.filter(post=post)
         _all = [ur.content for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    def average_mobile(self, post):
-        post_ratings = self.objects.filter(post=post)
+    @classmethod
+    def average_mobile(cls, post):
+        post_ratings = cls.objects.filter(post=post)
         _all = [ur.mobile for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    def average_rating(self, post):
-        post_ratings = self.objects.filter(post=post)
+    @classmethod
+    def average_rating(cls, post):
+        post_ratings = cls.objects.filter(post=post)
         _all = [ur.average_judge_rating for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    def get_last_post(self):
-        return self.objects.last()
+    @classmethod
+    def get_last_post(cls):
+        return cls.objects.last()
 
 
 class Followers(models.Model):
@@ -194,7 +201,7 @@ class technologies(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, related_name='comments', null=True)
     post = models.ForeignKey(Post, related_name='comments', null=True)
-    rating = models.TextField(null=True)
+    review = models.TextField(null=True, blank=True)
 
 
 class Collection(models.Model):
