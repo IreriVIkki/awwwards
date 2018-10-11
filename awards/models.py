@@ -67,11 +67,6 @@ class Post(models.Model):
     site_link = models.CharField(max_length=200, null=True)
     location = models.ManyToManyField(Location, blank=True)
     post_date = models.DateTimeField(auto_now_add=True)
-    usability = models.FloatField(default=0.00, null=True)
-    design = models.FloatField(default=0.00, null=True)
-    creativity = models.FloatField(default=0.00, null=True)
-    content = models.FloatField(default=0.00, null=True)
-    mobile = models.FloatField(default=0.00, null=True)
     is_sotd = models.BooleanField(default=False)
     is_hm = models.BooleanField(default=False)
     is_soty = models.BooleanField(default=False)
@@ -126,21 +121,37 @@ class Followers(models.Model):
 
 
 class tags(models.Model):
-    user = models.ForeignKey(User, related_name='tags')
-    post = models.ForeignKey(Post)
+    post = models.ForeignKey(Post, related_name='tags')
+    tag = models.CharField(max_length=50)
 
 
 class technologies(models.Model):
-    user = models.ForeignKey(User, related_name='technologies')
-    post = models.ForeignKey(Post)
+    post = models.ForeignKey(Post, related_name='technologies')
+    tag = models.CharField(max_length=50)
 
 
 class Rating(models.Model):
-    pass
+    user = models.ForeignKey(User, related_name='ratings')
+    post = models.ForeignKey(Post)
+    usability = models.FloatField(default=0.00, null=True)
+    design = models.FloatField(default=0.00, null=True)
+    creativity = models.FloatField(default=0.00, null=True)
+    content = models.FloatField(default=0.00, null=True)
+    mobile = models.FloatField(default=0.00, null=True)
+    rating = models.FloatField(default=average)
+
+    def average(self):
+        rated = [i for i in [self.usability, self.design,
+                             self.creativity, self.content, self.mobile] if i != 0.00]
+        rating = sum(rated[0:len(rated)])/len(rated)
+
+        return rating
 
 
 class Comment(models.Model):
-    pass
+    author = models.ForeignKey(User, related_name='comments')
+    post = models.ForeignKey(Post)
+    rating = models.FloatField(max_length=500, null=True)
 
 
 class Collection(models.Model):
