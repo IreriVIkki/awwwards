@@ -106,16 +106,17 @@ def post_website(request):
 def rate_website(request, post_id):
     if request.user.is_authenticated:
         user = request.user
-        post = Post.get_one_post(post_id)
+        print(post_id)
+        post = Post.objects.get(pk=post_id)
         p_user = post.uploaded_by
         if request.method == 'POST':
             rf = RatePostForm(request.POST)
             print(rf.is_valid())
             if rf.is_valid():
                 rf.save()
-                rating = Rating.get_last_post()
+                rating = Rating.objects.last()
                 rating.user = user
-                rating.post = post1
+                rating.post = post
                 rating.save()
                 return redirect('home')
         else:
@@ -124,7 +125,8 @@ def rate_website(request, post_id):
         context = {
             'rf_form': rf,
             'p_user': p_user,
-            'user': user
+            'user': user,
+            'post': post
         }
         return render(request, 'rate.html', context)
     return redirect('home')
