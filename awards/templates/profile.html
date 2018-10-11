@@ -3,11 +3,13 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row p-0 m-0">
 
     <div class="col-lg-6 col-md-6 col-sm-6">
 
         <h4>Account Details</h4>
+
+        <a href="{% url 'edit_profile' %}"></a>
 
         <hr>
 
@@ -28,6 +30,16 @@
             <dd>{{ request.user.profile.get_snippet_count }}</dd>
         </dl>
 
+    </div>
+
+
+    <div>
+        {% for post in posts %}
+        <p>{{ post.name }}</p>
+        <div class="container w-100">
+            <img class="w-100" src="{{ post.landing_image.url }}" alt="">
+        </div>
+        {% endfor %}
     </div>
 
     <div class="col-lg-6 col-md-6 col-sm-6">

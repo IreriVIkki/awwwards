@@ -26,7 +26,6 @@ class Profile(models.Model):
     age = models.PositiveIntegerField(blank=True, null=True)
     phone = models.PositiveIntegerField(null=True)
     email = models.CharField(max_length=50, null=True)
-    location = models.CharField(max_length=150, null=True)
     is_judge = models.BooleanField(default=False)
     is_pro = models.BooleanField(default=False)
     is_chief = models.BooleanField(default=False)
@@ -41,20 +40,6 @@ class Profile(models.Model):
         db_table = 'userprofile'
 
 
-class Location(models.Model):
-    country = models.CharField(max_length=50, null=True)
-    state = models.CharField(max_length=50, null=True)
-    zipcode = models.IntegerField(null=True)
-    address = models.IntegerField(null=True)
-
-    def locat(self):
-        return f'{self.address}-{self.zipcode}, {self.state}, {self.country}'
-    location = models.CharField(max_length=500, default=locat)
-
-    def __str__(self):
-        return self.location
-
-
 class Post(models.Model):
     uploaded_by = models.ForeignKey(User, null=True, related_name='posts')
     name = models.CharField(max_length=200, null=True)
@@ -65,7 +50,6 @@ class Post(models.Model):
     screenshot_4 = models.ImageField(upload_to='site-images/', null=True)
     description = models.TextField(blank=True)
     site_link = models.CharField(max_length=200, null=True)
-    location = models.ManyToManyField(Location, blank=True)
     post_date = models.DateTimeField(auto_now_add=True)
     is_sotd = models.BooleanField(default=False)
     is_hm = models.BooleanField(default=False)
@@ -79,9 +63,9 @@ class Post(models.Model):
         return all_posts
 
     @classmethod
-    def user_posts(cls, user_name):
-        user = User.objects.filter(username=user_name)[0]
-        posts = cls.objects.filter(uploaded_by=user)
+    def user_posts(cls, user_id):
+        user = User.objects.get(pk=user_id)
+        posts = user.posts.all()
         return posts
 
     @classmethod
@@ -93,6 +77,10 @@ class Post(models.Model):
         posts = cls.objects.filter(uploaded_by=post.uploaded_by)
         return posts
 
+    @classmethod
+    def get_one_post(cls, post_id):
+        return cls.objects.get(pk=post_id)
+
     def save_post(self, user):
         self.uploaded_by = user
         self.save()
@@ -101,9 +89,26 @@ class Post(models.Model):
         return self.name
 
 
+class Location(models.Model):
+    post = models.ForeignKey(Post, null=True, related_name='location')
+    user = models.ForeignKey(User, null=True, related_name='address')
+    country = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=50, null=True)
+    zipcode = models.IntegerField(null=True)
+    address = models.IntegerField(null=True)
+
+    @classmethod
+    def locat(cls):
+        return f'{cls.address}-{cls.zipcode}, {cls.state}, {cls.country}'
+    location = models.CharField(max_length=500, default=locat)
+
+    def __str__(self):
+        return self.location
+
+
 class Rating(models.Model):
-    user = models.ForeignKey(User, related_name='ratings')
-    post = models.ForeignKey(Post, related_name='ratings')
+    user = models.ForeignKey(User, related_name='ratings', null=True)
+    post = models.ForeignKey(Post, related_name='ratings', null=True)
     usability = models.FloatField(default=0.00, null=True)
     design = models.FloatField(default=0.00, null=True)
     creativity = models.FloatField(default=0.00, null=True)
@@ -165,6 +170,10 @@ class Rating(models.Model):
         average = sum(_all)/len(_all)
         print(average)
         return average
+
+    @classmethod
+    def get_last_post(cls):
+        return cls.objects.last()
 
 
 class Followers(models.Model):

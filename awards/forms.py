@@ -2,6 +2,7 @@ from django import forms
 # fill in custom user info then save it
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from .models import *
 
 
 class MyRegistrationForm(UserCreationForm):
@@ -22,3 +23,30 @@ class MyRegistrationForm(UserCreationForm):
         user.save()
 
         return user
+
+
+class WebsitePostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ('name', 'landing_image',
+                  'screenshot_1', 'screenshot_2', 'screenshot_3', 'screenshot_4', 'description', 'site_link')
+
+
+class LocationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        exclude = ['location']
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ['user', 'is_judge', 'is_pro', 'is_chief', 'is_tribe']
+        list_display = []
+
+
+class RatePostForm(forms.Models):
+    class Meta:
+        model = Rating
+        exclude = ['user', 'post']

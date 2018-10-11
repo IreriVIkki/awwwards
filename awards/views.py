@@ -3,7 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.mail import mail_admins
 from django.contrib.auth.models import User
 from django.contrib import auth, messages
-from .forms import MyRegistrationForm
+from .forms import *
+from .models import *
 import datetime
 
 # Create your views here.
@@ -43,7 +44,12 @@ def profile(request):
     if not request.user.is_authenticated():
         return redirect("login")
     user = get_object_or_404(User, id=request.user.id)
-    return render(request, 'profile.html', {'user': user})
+    posts = Post.user_posts(user.id)
+    context = {
+        'user': user,
+        'posts': posts
+    }
+    return render(request, 'profile.html', context)
 
 
 def signup(request):
@@ -60,3 +66,91 @@ def signup(request):
         'form': form
     }
     return render(request, 'register.html', context)
+
+
+def post_website(request):
+    if request.user.is_authenticated:
+        user = request.user
+        if request.method == 'POST':
+            pf = WebsitePostForm(request.POST, request.FILES)
+            lf = LocationForm(request.POST)
+            print(pf.is_valid())
+            print(lf.is_valid())
+            if pf.is_valid() and lf.is_valid():
+                pf.save()
+                post = Post.objects.last()
+                lf.save()
+                location = Location.objects.last()
+                location.user = user
+                location.post = post
+                location.save()
+                post.save_post(user)
+                return redirect('profile')
+        else:
+            pf = WebsitePostForm()
+            lf = LocationForm()
+
+        context = {
+            'lf_form': lf,
+            'pf_form': pf
+        }
+        return render(request, 'new_upload.html', context)
+    return redirect('home')
+
+
+def rate_website(request, post_id):
+    if request.user.is_authenticated:
+        user = request.user
+        post = Post.get_one_post(post_id)
+        if request.method == 'POST':
+            rf = RatePostForm(request.POST)
+            print(rf.is_valid())
+            if rf.is_valid() and lf.is_valid():
+                rf.save()
+                rating = Rating.get_last_post()
+                rating.user = user
+                rating.post = post
+                rating.save()
+                return redirect('home')
+        else:
+            rf = RatePostForm()
+
+        context = {
+            'rf_form': rf
+        }
+        return render(request, 'rate.html', context)
+    return redirect('home')
+
+
+def edit_profile(request):
+    form = ProfileForm()
+    user = request.user
+    if request.user.is_authenticated():
+        if request.method == "POST":
+            try:
+                profile = user.profile
+                form = ProfileForm(instance=profile)
+                form = ProfileForm(
+                    request.POST, request.FILES, instance=profile)
+                if form.is_valid():
+                    update = form.save(commit=False)
+                    update.user = user
+                    update.save()
+            except:
+                form = ProfileForm(request.POST, request.FILES)
+                print(form.is_valid())
+                if form.is_valid():
+                    form.save()
+                    name = form.cleaned_data['name']
+                    profile = Profile.objects.get(name=name)
+                    print(profile)
+                    profile.user = user
+                    profile.save()
+            return redirect('home')
+    else:
+        form = ProfileForm()
+    context = {
+        'form': form,
+        'user': user,
+    }
+    return render(request, 'profile_edit.html', context)
