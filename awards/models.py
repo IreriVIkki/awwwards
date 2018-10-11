@@ -48,7 +48,7 @@ class Location(models.Model):
     address = models.IntegerField(null=True)
 
     def locat(self):
-        return f'{self.address}-{self.zipcode}, {(self.state).capitalize()}, {(self.country).capitalize()}'
+        return f'{self.address}-{self.zipcode}, {self.state}, {self.country}'
     location = models.CharField(max_length=500, default=locat)
 
     def __str__(self):
@@ -187,49 +187,31 @@ class Followers(models.Model):
 
 
 class tags(models.Model):
-    post = models.ForeignKey(Post, related_name='tags')
-    tag = models.CharField(max_length=50)
+    post = models.ForeignKey(Post, related_name='tags', null=True)
+    tag = models.CharField(max_length=50, null=True)
 
 
 class technologies(models.Model):
-    post = models.ForeignKey(Post, related_name='technologies')
-    tag = models.CharField(max_length=50)
+    post = models.ForeignKey(Post, related_name='technologies', null=True)
+    tag = models.CharField(max_length=50, null=True)
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, related_name='comments')
-    post = models.ForeignKey(Post)
-    rating = models.FloatField(max_length=500, null=True)
+    author = models.ForeignKey(User, related_name='comments', null=True)
+    post = models.ForeignKey(Post, related_name='comments', null=True)
+    rating = models.TextField(null=True)
 
 
 class Collection(models.Model):
-    user = models.ForeignKey(User, related_name='collections')
+    user = models.ForeignKey(User, related_name='collections', null=True)
     post = models.ForeignKey(Post)
 
 
 class PostLikes(models.Model):
-    pass
+    user = models.ForeignKey(User, related_name='liked_posts', null=True)
+    post = models.ForeignKey(Post, related_name='likes', null=True)
 
 
 class CommentsLikes(models.Model):
-    pass
-
-
-class SiteOfDay(models.Model):
-    pass
-
-
-class SiteOfYear(models.Model):
-    pass
-
-
-class HonorableMention(models.Model):
-    pass
-
-
-class MobileOfWeek(models.Model):
-    pass
-
-
-class DeveloperSite(models.Model):
-    pass
+    user = models.ForeignKey(User, related_name='liked_by', null=True)
+    comment = models.ForeignKey(Comment, related_name='likes', null=True)
