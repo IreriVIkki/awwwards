@@ -26,7 +26,7 @@ def login(request):
         if user is not None:
             # correct username and password login the user
             auth.login(request, user)
-            return redirect('profile')
+            return redirect('home')
 
         else:
             messages.error(request, 'Error wrong username/password')
@@ -43,11 +43,17 @@ def profile(request):
     user = get_object_or_404(User, id=request.user.id)
     if not request.user.is_authenticated():
         return redirect("login")
-    user = get_object_or_404(User, id=request.user.id)
-    posts = Post.user_posts(user.id)
+    try:
+        profile = user.profile
+    except:
+        return redirect('edit_profile')
+
+    user = User.objects.get(pk=user.id)
+    posts = user.posts.all()
     context = {
         'user': user,
-        'posts': posts
+        'posts': posts,
+        'profile': profile
     }
     return render(request, 'profile.html', context)
 
@@ -77,14 +83,13 @@ def post_website(request):
             print(pf.is_valid())
             print(lf.is_valid())
             if pf.is_valid() and lf.is_valid():
-                pf.save()
-                post = Post.objects.last()
                 lf.save()
                 location = Location.objects.last()
-                location.user = user
-                location.post = post
-                location.save()
+                pf.save()
+                post = Post.objects.last()
                 post.save_post(user)
+                post.uploaded_from = location
+                print('4estyguhbijnokl')
                 return redirect('profile')
         else:
             pf = WebsitePostForm()
@@ -102,6 +107,7 @@ def rate_website(request, post_id):
     if request.user.is_authenticated:
         user = request.user
         post = Post.get_one_post(post_id)
+        p_user = post.uploaded_by
         if request.method == 'POST':
             rf = RatePostForm(request.POST)
             print(rf.is_valid())
@@ -109,14 +115,16 @@ def rate_website(request, post_id):
                 rf.save()
                 rating = Rating.get_last_post()
                 rating.user = user
-                rating.post = post
+                rating.post = post1
                 rating.save()
                 return redirect('home')
         else:
             rf = RatePostForm()
 
         context = {
-            'rf_form': rf
+            'rf_form': rf,
+            'p_user': p_user,
+            'user': user
         }
         return render(request, 'rate.html', context)
     return redirect('home')
@@ -124,6 +132,7 @@ def rate_website(request, post_id):
 
 def edit_profile(request):
     form = ProfileForm()
+    ad_form = AddressForm()
     user = request.user
     if request.user.is_authenticated():
         if request.method == "POST":
@@ -140,17 +149,16 @@ def edit_profile(request):
                 form = ProfileForm(request.POST, request.FILES)
                 print(form.is_valid())
                 if form.is_valid():
-                    form.save()
-                    name = form.cleaned_data['name']
-                    profile = Profile.objects.get(name=name)
-                    print(profile)
-                    profile.user = user
-                    profile.save()
+                    profile = form.save(commit=False)
+                    profile.save_profile(user)
             return redirect('home')
     else:
         form = ProfileForm()
+        ad_form = AddressForm()
+
     context = {
         'form': form,
+        'ad_form': ad_form,
         'user': user,
     }
     return render(request, 'profile_edit.html', context)

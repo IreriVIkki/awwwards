@@ -36,7 +36,13 @@ class WebsitePostForm(forms.ModelForm):
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
-        exclude = ['location']
+        exclude = ['user', 'post', 'state', 'zipcode', 'address']
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        exclude = ['user', 'post']
 
 
 class ProfileForm(forms.ModelForm):

@@ -14,7 +14,6 @@
 
     {% block styles %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     {% endblock %}
 
     <title>awwwards</title>
@@ -67,7 +66,7 @@
                     </div>
                     <div id="login-submit" class="d-flex align-items-center w-25">
                         {% if user.is_authenticated %}
-                        <a class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50" href="{% url 'profile'%}">profile</a>
+                        <a class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50" href="/userdetails/">profile</a>
                         <a class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50" href="{% url 'logout'%}">logout</a>
 
                         {% else %}

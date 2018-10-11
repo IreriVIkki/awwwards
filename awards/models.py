@@ -4,12 +4,24 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class Location(models.Model):
+    country = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=50, null=True)
+    zipcode = models.IntegerField(null=True)
+    address = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.country
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, related_name='profile')
     name = models.CharField(max_length=50)
     profile_photo = models.ImageField(upload_to='images/', blank=True,)
     user_name = models.CharField(max_length=50, null=True)
     occupation = models.CharField(max_length=300, null=True)
+    user_address = models.ForeignKey(
+        Location, null=True, related_name='user_address')
     bio = models.TextField(blank=True)
     website = models.CharField(max_length=150, null=True)
     facebook = models.CharField(max_length=200, null=True)
@@ -23,25 +35,29 @@ class Profile(models.Model):
     )
     gender = models.CharField(
         max_length=20, choices=STATUS_CHOICES, blank=True)
-    age = models.PositiveIntegerField(blank=True, null=True)
-    phone = models.PositiveIntegerField(null=True)
+    age = models.IntegerField(blank=True, null=True)
+    phone = models.IntegerField(null=True)
     email = models.CharField(max_length=50, null=True)
     is_judge = models.BooleanField(default=False)
     is_pro = models.BooleanField(default=False)
     is_chief = models.BooleanField(default=False)
     is_tribe = models.BooleanField(default=False)
 
+    def save_profile(self, current_user):
+        self.is_chief = False
+        self.is_pro = False
+        self.is_judge = False
+        self.is_tribe = False
+        self.user = current_user
+        self.save()
+
     def __str__(self):
         return self.user_name
-
-    class Meta:
-        verbose_name = 'Profile'
-        verbose_name_plural = 'Profiles'
-        db_table = 'userprofile'
 
 
 class Post(models.Model):
     uploaded_by = models.ForeignKey(User, null=True, related_name='posts')
+    uploaded_from = models.ForeignKey(Location, null=True)
     name = models.CharField(max_length=200, null=True)
     landing_image = models.ImageField(upload_to='site-images/', null=True)
     screenshot_1 = models.ImageField(upload_to='site-images/', null=True)
@@ -57,53 +73,31 @@ class Post(models.Model):
     is_mow = models.BooleanField(default=False)
     is_ds = models.BooleanField(default=False)
 
-    @classmethod
-    def all_posts(cls):
-        all_posts = cls.objects.all()
+    def all_posts(self):
+        all_posts = self.objects.all()
         return all_posts
 
-    @classmethod
-    def user_posts(cls, user_id):
-        user = User.objects.get(pk=user_id)
-        posts = user.posts.all()
+    def filter_by_search_term(self, search_term):
+        return self.objects.filter(description__icontains=search_term)
+
+    def get_user_profile(self, post):
+        posts = self.objects.filter(uploaded_by=post.uploaded_by)
         return posts
 
-    @classmethod
-    def filter_by_search_term(cls, search_term):
-        return cls.objects.filter(description__icontains=search_term)
-
-    @classmethod
-    def get_user_profile(cls, post):
-        posts = cls.objects.filter(uploaded_by=post.uploaded_by)
-        return posts
-
-    @classmethod
-    def get_one_post(cls, post_id):
-        return cls.objects.get(pk=post_id)
+    def get_one_post(self, post_id):
+        return self.objects.get(pk=post_id)
 
     def save_post(self, user):
+        self.is_ds = False
+        self.is_hm = False
+        self.is_mow = False
+        self.is_sotd = False
+        self.is_soty = False
         self.uploaded_by = user
         self.save()
 
     def __str__(self):
         return self.name
-
-
-class Location(models.Model):
-    post = models.ForeignKey(Post, null=True, related_name='location')
-    user = models.ForeignKey(User, null=True, related_name='address')
-    country = models.CharField(max_length=50, null=True)
-    state = models.CharField(max_length=50, null=True)
-    zipcode = models.IntegerField(null=True)
-    address = models.IntegerField(null=True)
-
-    @classmethod
-    def locat(cls):
-        return f'{cls.address}-{cls.zipcode}, {cls.state}, {cls.country}'
-    location = models.CharField(max_length=500, default=locat)
-
-    def __str__(self):
-        return self.location
 
 
 class Rating(models.Model):
@@ -123,57 +117,50 @@ class Rating(models.Model):
         print(rating)
         return rating
 
-    @classmethod
-    def average_usability(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+    def average_usability(self, post):
+        post_ratings = self.objects.filter(post=post)
         _all = [ur.usability for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    @classmethod
-    def average_design(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+    def average_design(self, post):
+        post_ratings = self.objects.filter(post=post)
         _all = [ur.design for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    @classmethod
-    def average_creativity(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+    def average_creativity(self, post):
+        post_ratings = self.objects.filter(post=post)
         _all = [ur.creativity for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    @classmethod
-    def average_content(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+    def average_content(self, post):
+        post_ratings = self.objects.filter(post=post)
         _all = [ur.content for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    @classmethod
-    def average_mobile(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+    def average_mobile(self, post):
+        post_ratings = self.objects.filter(post=post)
         _all = [ur.mobile for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    @classmethod
-    def average_rating(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+    def average_rating(self, post):
+        post_ratings = self.objects.filter(post=post)
         _all = [ur.average_judge_rating for ur in post_ratings]
         average = sum(_all)/len(_all)
         print(average)
         return average
 
-    @classmethod
-    def get_last_post(cls):
-        return cls.objects.last()
+    def get_last_post(self):
+        return self.objects.last()
 
 
 class Followers(models.Model):
@@ -186,9 +173,8 @@ class Followers(models.Model):
         self.follower = current_user
         self.save()
 
-    @classmethod
-    def unfollow_user(cls, user):
-        fol = cls.objects.get(follower=user)
+    def unfollow_user(self, user):
+        fol = self.objects.get(follower=user)
         fol.delete()
 
     def __str__(self):
