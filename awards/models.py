@@ -46,10 +46,10 @@ class Location(models.Model):
     state = models.CharField(max_length=50, null=True)
     zipcode = models.IntegerField(null=True)
     address = models.IntegerField(null=True)
-    location = models.CharField(default=locat)
 
     def locat(self):
         return f'{self.address}-{self.zipcode}, {(self.state).capitalize()}, {(self.country).capitalize()}'
+    location = models.CharField(max_length=500, default=locat)
 
     def __str__(self):
         return self.location
@@ -57,7 +57,7 @@ class Location(models.Model):
 
 class Post(models.Model):
     uploaded_by = models.ForeignKey(User, null=True, related_name='posts')
-    name = models.CharField(min_length=200, null=True)
+    name = models.CharField(max_length=200, null=True)
     landing_image = models.ImageField(upload_to='site-images/', null=True)
     screenshot_1 = models.ImageField(upload_to='site-images/', null=True)
     screenshot_2 = models.ImageField(upload_to='site-images/', null=True)
@@ -101,6 +101,72 @@ class Post(models.Model):
         return self.name
 
 
+class Rating(models.Model):
+    user = models.ForeignKey(User, related_name='ratings')
+    post = models.ForeignKey(Post, related_name='ratings')
+    usability = models.FloatField(default=0.00, null=True)
+    design = models.FloatField(default=0.00, null=True)
+    creativity = models.FloatField(default=0.00, null=True)
+    content = models.FloatField(default=0.00, null=True)
+    mobile = models.FloatField(default=0.00, null=True)
+
+    @property
+    def average_judge_rating(self, null=True):
+        rated = [i for i in [self.usability, self.design,
+                             self.creativity, self.content, self.mobile] if i != None]
+        rating = sum(rated[0:len(rated)])/len(rated)
+        print(rating)
+        return rating
+
+    @classmethod
+    def average_usability(cls, post):
+        post_ratings = cls.objects.filter(post=post)
+        _all = [ur.usability for ur in post_ratings]
+        average = sum(_all)/len(_all)
+        print(average)
+        return average
+
+    @classmethod
+    def average_design(cls, post):
+        post_ratings = cls.objects.filter(post=post)
+        _all = [ur.design for ur in post_ratings]
+        average = sum(_all)/len(_all)
+        print(average)
+        return average
+
+    @classmethod
+    def average_creativity(cls, post):
+        post_ratings = cls.objects.filter(post=post)
+        _all = [ur.creativity for ur in post_ratings]
+        average = sum(_all)/len(_all)
+        print(average)
+        return average
+
+    @classmethod
+    def average_content(cls, post):
+        post_ratings = cls.objects.filter(post=post)
+        _all = [ur.content for ur in post_ratings]
+        average = sum(_all)/len(_all)
+        print(average)
+        return average
+
+    @classmethod
+    def average_mobile(cls, post):
+        post_ratings = cls.objects.filter(post=post)
+        _all = [ur.mobile for ur in post_ratings]
+        average = sum(_all)/len(_all)
+        print(average)
+        return average
+
+    @classmethod
+    def average_rating(cls, post):
+        post_ratings = cls.objects.filter(post=post)
+        _all = [ur.average_judge_rating for ur in post_ratings]
+        average = sum(_all)/len(_all)
+        print(average)
+        return average
+
+
 class Followers(models.Model):
     follower = models.ForeignKey(User, related_name='followers', null=True)
     following = models.ForeignKey(User, related_name='following', null=True)
@@ -128,24 +194,6 @@ class tags(models.Model):
 class technologies(models.Model):
     post = models.ForeignKey(Post, related_name='technologies')
     tag = models.CharField(max_length=50)
-
-
-class Rating(models.Model):
-    user = models.ForeignKey(User, related_name='ratings')
-    post = models.ForeignKey(Post)
-    usability = models.FloatField(default=0.00, null=True)
-    design = models.FloatField(default=0.00, null=True)
-    creativity = models.FloatField(default=0.00, null=True)
-    content = models.FloatField(default=0.00, null=True)
-    mobile = models.FloatField(default=0.00, null=True)
-    rating = models.FloatField(default=average)
-
-    def average(self):
-        rated = [i for i in [self.usability, self.design,
-                             self.creativity, self.content, self.mobile] if i != 0.00]
-        rating = sum(rated[0:len(rated)])/len(rated)
-
-        return rating
 
 
 class Comment(models.Model):
