@@ -46,7 +46,7 @@ class ProfileForm(forms.ModelForm):
         list_display = []
 
 
-class RatePostForm(forms.Models):
+class RatePostForm(forms.ModelForm):
     class Meta:
         model = Rating
         exclude = ['user', 'post']

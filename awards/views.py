@@ -105,7 +105,7 @@ def rate_website(request, post_id):
         if request.method == 'POST':
             rf = RatePostForm(request.POST)
             print(rf.is_valid())
-            if rf.is_valid() and lf.is_valid():
+            if rf.is_valid():
                 rf.save()
                 rating = Rating.get_last_post()
                 rating.user = user
