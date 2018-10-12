@@ -141,10 +141,12 @@ def post_website(request):
 
 
 def rate_website(request, post_id):
+    user = request.user
+    post = Post.objects.get(pk=post_id)
+    post_reviews = Rating.objects.filter(post=post)
+    judges = list(set([judge.user for judge in post_reviews]))
     if request.user.is_authenticated:
-        user = request.user
         print(post_id)
-        post = Post.objects.get(pk=post_id)
         p_user = post.uploaded_by
         if request.method == 'POST':
             rf = RatePostForm(request.POST)
@@ -163,12 +165,11 @@ def rate_website(request, post_id):
                 review.author = user
                 review.post = post
                 review.save()
-            return redirect('home')
+            return redirect(reverse('profile'))
         else:
             rf = RatePostForm()
             cf = ReviewCommentForm()
-        pr = Rating.objects.filter(post=post)
-        print([p.usability for p in pr])
+        print(judges)
 
         average_usability = Rating.average_usability(post)
         average_design = Rating.average_design(post)
@@ -182,12 +183,13 @@ def rate_website(request, post_id):
             'average_creativity_w': stringify_rating(average_creativity)[0],     'average_creativity_d': stringify_rating(average_creativity)[1],
             'average_content_w': stringify_rating(average_content)[0],           'average_content_d': stringify_rating(average_content)[1],
             'average_mobile_w': stringify_rating(average_mobile)[0],            'average_mobile_d': stringify_rating(average_mobile)[1],
-            'average_rating_w': stringify_rating(average_rating)[0],            'average_rating_d': stringify_rating(average_rating)[1],
+            'average_rating': average_rating,
             'rf_form': rf,
             'cf_form': cf,
             'p_user': p_user,
             'user': user,
-            'post': post
+            'post': post,
+            'judges': judges
         }
         return render(request, 'rate.html', context)
     return redirect('home')

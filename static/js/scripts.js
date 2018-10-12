@@ -23,12 +23,12 @@ $(document).ready(function () {
     });
 });
 
-function getid(obj) {
-    alert(obj.id)
-    return obj.id
-}
+// function getid(obj) {
+//     alert(obj.id)
+//     return obj.id
+// }
 
-function outmouse(obj) {
-    alert(obj.id)
-    return obj.id
-}
+// function outmouse(obj) {
+//     alert(obj.id)
+//     return obj.id
+// }

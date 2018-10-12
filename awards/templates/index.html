@@ -4,7 +4,6 @@
 {% block content %}
 
 <section>
-
     <!-- section for the landing page which is 400px high at full screen -->
     <div class="landing container-fluid p-0 txt-lightgrey">
         <div id="landing-img" class=" d-flex align-items-start">
@@ -145,27 +144,29 @@
 
                 <div class="cus-col-md-4 px-0" id="id{{ post.name }}" onmouseover="getid(this);" onmouseout="outmouse(this);">
                     <div id=" site-box" class="card card-bg ">
-                        <div id="site-image-box" class="">
-                            <div class="site-img">
-                                <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
-                                <div class="site-fade site-fade-out">
-                                    <div class="h-100 p-3 d-flex flex-column">
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
-                                                <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
-                                                    alt="">
-                                                {{ pod.likes.all | length }}</button>
-                                            <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
-                                        </div>
-                                        <div class="d-flex justify-content-end mt-auto">
-                                            <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
-                                                <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}" alt="">
-                                            </button>
+                        <a href="rate/post/{{ post.id }}">
+                            <div id="site-image-box" class="">
+                                <div class="site-img">
+                                    <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
+                                    <div class="site-fade site-fade-out">
+                                        <div class="h-100 p-3 d-flex flex-column">
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                                                    <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
+                                                        alt="">
+                                                    {{ pod.likes.all | length }}</button>
+                                                <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
+                                            </div>
+                                            <div class="d-flex justify-content-end mt-auto">
+                                                <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
+                                                    <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}" alt="">
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                         <div id="site-content-box" class="container p-3">
                             <div class="pb-4">
                                 <a class="mb-0 text-white-50" href="">HKI Paris</a>
