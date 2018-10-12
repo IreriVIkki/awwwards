@@ -6,9 +6,9 @@
 <section>
 
     <!-- section for the landing page which is 400px high at full screen -->
-    <div class="landing container-fluid p-0">
+    <div class="landing container-fluid p-0 txt-lightgrey">
         <div id="landing-img" class=" d-flex align-items-start">
-            <img class="w-100" src="{% static 'img/landingbg.jpg' %}" alt="">
+            <img class="w-100 d-flex align-self-center" src="{{ post.landing_image.url }}" alt="">
         </div>
         <div class="absolute-fade landing-abs-fade light-fade"></div>
         <div id="landing-overlay">
@@ -16,31 +16,31 @@
                 <div class="d-flex align-items-center">
                     <div class="site-of-day d-flex mr-auto  letter-space-1">
                         <span class="text-white-50">Site Of The Day</span>
-                        <span class="ml-3 text-white">October 09,2018</span>
+                        <span class="ml-3 text-white">{{ post.post_date | date:"M d, Y"}}</span>
                     </div>
                     <div id="share">
                         <img class="md-icon" src="{% static 'img/share.png' %}" alt="">
                     </div>
                 </div>
                 <div class="text-center pt-4 mt-2">
-                    <h1 class="mb-0 f-45 text-white site-title" href="">Erik Jorgensen</h1>
+                    <h1 class="mb-0 f-45 text-white site-title" href="">{{post.name}}</h1>
                 </div>
                 <div class="text-center p-1">
-                    <p class="text-white-50 mb-0">
+                    <p class="text-white-50 mb-0  text-uppercase">
                         BY
-                        <a href="" class="c-blue nav-link d-inline-flex px-1">STUPID STUDIO</a>
+                        <a href="/userdetails/{{ post.uploaded_by.id }}/{{ post.uploaded_by.profile.user_name }}" class="c-blue nav-link d-inline-flex px-1">{{post.uploaded_by.username}}</a>
                         FROM
                         <span class="text-white">DENMARK</span>
                         WITH
-                        <span class="text-white">7.49</span>
+                        <span class="text-white">{{ average_rating }}</span>
                     </p>
                 </div>
                 <div class="d-flex justify-content-center mt-3 mb-5">
                     <div class="mx-2 ratings">
                         <div class="circle border-red text-center d-flex align-items-center justify-content-center">
                             <div class="text-white">
-                                <span class="int font-weight-bold">7</span>
-                                <span class="dec">.69</span>
+                                <span class="int font-weight-bold">{{ average_design_w }}</span>
+                                <span class="dec">.{{ average_design_d }}</span>
                             </div>
                         </div>
                         <div class="p-2 text-center">
@@ -50,8 +50,8 @@
                     <div class="mx-2 ratings">
                         <div class="circle border-warning text-center d-flex align-items-center justify-content-center">
                             <div class="text-white">
-                                <span class="int font-weight-bold">7</span>
-                                <span class="dec">.69</span>
+                                <span class="int font-weight-bold">{{ average_usability_w }}</span>
+                                <span class="dec">.{{ average_usability_d }}</span>
                             </div>
                         </div>
                         <div class="p-2 text-center">
@@ -61,8 +61,8 @@
                     <div class="mx-2 ratings">
                         <div class="circle border-success text-center d-flex align-items-center justify-content-center">
                             <div class="text-white">
-                                <span class="int font-weight-bold">7</span>
-                                <span class="dec">.69</span>
+                                <span class="int font-weight-bold">{{ average_creativity_w }}</span>
+                                <span class="dec">.{{ average_creativity_d }}</span>
                             </div>
                         </div>
                         <div class="p-2 text-center">
@@ -72,8 +72,8 @@
                     <div class="mx-2 ratings">
                         <div class="circle border-info text-center d-flex align-items-center justify-content-center">
                             <div class="text-white">
-                                <span class="int font-weight-bold">7</span>
-                                <span class="dec">.69</span>
+                                <span class="int font-weight-bold">{{ average_content_w }}</span>
+                                <span class="dec">.{{ average_content_d }}</span>
                             </div>
                         </div>
                         <div class="p-2 text-center">
@@ -83,8 +83,8 @@
                     <div class="mx-2 ratings">
                         <div class="circle border-info text-center d-flex align-items-center justify-content-center">
                             <div class="text-white">
-                                <span class="int font-weight-bold">7</span>
-                                <span class="dec">.69</span>
+                                <span class="int font-weight-bold">{{ average_mobile_w }}</span>
+                                <span class="dec">.{{ average_mobile_d }}</span>
                             </div>
                         </div>
                         <div class="p-2 text-center">
@@ -94,8 +94,10 @@
                 </div>
                 <div class="d-flex my-4">
                     <div class="mr-auto">
-                        <button class="btn btn-sm badge-pill px-4 btn-success">Visite Site</button>
-                        <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">Likes</button>
+                        <a href="{{ post.site_link }}" class="btn btn-sm badge-pill px-4 btn-success">Visite Site</a>
+                        <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                            <img class="rem-1 w-auto pr-2" src="{% static 'img/like.png' %}" alt="">
+                            {{ post.likes.all | length }}</button>
                         <button class="btn btn-sm badge-pill px-4 btn-outline-light">Collect</button>
                     </div>
                     <div class="ml-auto d-flex">
@@ -137,15 +139,22 @@
                 </div>
             </div>
             <div id="row-content" class="row m-0 p-0 d-flex justify-content-between">
-                <div class="cus-col-md-4 px-0">
-                    <div id="site-box" class="card card-bg ">
+
+
+                {% for pod in posts %}
+
+                <div class="cus-col-md-4 px-0" id="id{{ post.name }}" onmouseover="getid(this);" onmouseout="outmouse(this);">
+                    <div id=" site-box" class="card card-bg ">
                         <div id="site-image-box" class="">
                             <div class="site-img">
-                                <img class="card-img-top img-hoverin" src="{% static 'img/cardimg1.jpg' %}" alt="">
+                                <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
                                 <div class="site-fade site-fade-out">
                                     <div class="h-100 p-3 d-flex flex-column">
                                         <div class="d-flex justify-content-end">
-                                            <button class="btn btn-sm btn-outline-secondary badge-pill">11</button>
+                                            <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                                                <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
+                                                    alt="">
+                                                {{ pod.likes.all | length }}</button>
                                             <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
                                         </div>
                                         <div class="d-flex justify-content-end mt-auto">
@@ -184,100 +193,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="cus-col-md-4 px-0">
-                    <div id="site-box" class="card card-bg ">
-                        <div id="site-image-box" class="">
-                            <div class="site-img">
-                                <div class="absolute-fade light-fade"></div>
-                                <img class="card-img-top" src="{% static 'img/cardimg1.jpg' %}" alt="">
-                                <div class="site-img-overlay h-100 p-3 d-flex flex-column">
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-secondary badge-pill">11</button>
-                                        <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
-                                    </div>
-                                    <div class="d-flex justify-content-end mt-auto">
-                                        <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
-                                            <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}" alt="">
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="site-content-box" class="container p-3">
-                            <div class="pb-4">
-                                <a class="mb-0 text-white-50" href="">HKI Paris</a>
-                            </div>
-                            <div class="d-flex pb-4 border-bottom border-secondary">
-                                <span class="text-secondary letter-space-1 f-12 mr-auto">From France</span>
-                                <span class="text-secondary letter-space-1 f-12">October 08, 2018</span>
-                            </div>
-                        </div>
-                        <div id="site-footer-box" class="container p-3 d-flex">
-                            <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
-                                    <img class="h-100 judge-btn" src="{% static 'img/person3.jpg' %}" alt="">
-                                </a>
-                                <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
-                                    <span class="pr-1">By </span>
-                                    <span class="font-weight-bold">HKI Paris</span>
-                                </a>
-                            </div>
-                            <div id="footer-right">
-                                <span class="btn badge-pill" id="HM"></span>
-                                <span class="btn badge-pill" id="DEV"></span>
-                                <span class="btn badge-pill" id="SOTD"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cus-col-md-4 px-0">
-                    <div id="site-box" class="card card-bg ">
-                        <div id="site-image-box" class="">
-                            <div class="site-img">
-                                <div class="absolute-fade light-fade"></div>
-                                <img class="card-img-top" src="{% static 'img/cardimg1.jpg' %}" alt="">
-                                <div class="site-img-overlay h-100 p-3 d-flex flex-column">
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-secondary badge-pill">11</button>
-                                        <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
-                                    </div>
-                                    <div class="d-flex justify-content-end mt-auto">
-                                        <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
-                                            <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}" alt="">
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="site-content-box" class="container p-3">
-                            <div class="pb-4">
-                                <a class="mb-0 text-white-50" href="">HKI Paris</a>
-                            </div>
-                            <div class="d-flex pb-4 border-bottom border-secondary">
-                                <span class="text-secondary letter-space-1 f-12 mr-auto">From France</span>
-                                <span class="text-secondary letter-space-1 f-12">October 08, 2018</span>
-                            </div>
-                        </div>
-                        <div id="site-footer-box" class="container p-3 d-flex">
-                            <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
-                                    <img class="h-100 judge-btn" src="{% static 'img/person3.jpg' %}" alt="">
-                                </a>
-                                <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
-                                    <span class="pr-1">By </span>
-                                    <span class="font-weight-bold">HKI Paris</span>
-                                </a>
-                            </div>
-                            <div id="footer-right">
-                                <span class="btn badge-pill" id="HM"></span>
-                                <span class="btn badge-pill" id="DEV"></span>
-                                <span class="btn badge-pill" id="SOTD"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>

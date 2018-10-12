@@ -7,7 +7,13 @@
     --border-light: rgb(58, 58, 58);
 }
 
+/* on the fly */
 
+.rem-1 {
+    height: 1rem;
+}
+
+/* on the fly */
 
 
 .absolute-fade {

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import math
 
 # Create your models here.
 
@@ -114,7 +115,6 @@ class Rating(models.Model):
         rated = [i for i in [self.usability, self.design,
                              self.creativity, self.content, self.mobile] if i != None]
         rating = sum(rated[0:len(rated)])/len(rated)
-        print(rating)
         return rating
 
     @classmethod
@@ -122,48 +122,42 @@ class Rating(models.Model):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.usability for ur in post_ratings]
         average = sum(_all)/len(_all)
-        print(average)
-        return average
+        return math.floor(average * 100)/100.0
 
     @classmethod
     def average_design(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.design for ur in post_ratings]
         average = sum(_all)/len(_all)
-        print(average)
-        return average
+        return math.floor(average * 100)/100.0
 
     @classmethod
     def average_creativity(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.creativity for ur in post_ratings]
         average = sum(_all)/len(_all)
-        print(average)
-        return average
+        return math.floor(average * 100)/100.0
 
     @classmethod
     def average_content(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.content for ur in post_ratings]
         average = sum(_all)/len(_all)
-        print(average)
-        return average
+        return math.floor(average * 100)/100.0
 
     @classmethod
     def average_mobile(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.mobile for ur in post_ratings]
         average = sum(_all)/len(_all)
-        print(average)
-        return average
+        return math.floor(average * 100)/100.0
 
     @classmethod
     def average_rating(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.average_judge_rating for ur in post_ratings]
         average = sum(_all)/len(_all)
-        print(average)
-        return average
+        return math.floor(average * 100)/100.0
 
     @classmethod
     def get_last_post(cls):

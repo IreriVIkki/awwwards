@@ -16,8 +16,16 @@
         {% endif %}
 
         <a href="{% url 'edit_profile' %}"></a>
+        <h1>{{ user.profile.user_name }}</h1>
+
+        <div class="container d-flex text-center">
+            <div class="w-50 mx-auto">
+                <img class="img-fluid" src="{{ user.profile.profile_photo.url }}" alt="">
+            </div>
+        </div>
 
         <hr>
+
 
         <dl class="dl-horizontal">
             <dt>Username</dt>

@@ -11,7 +11,27 @@ import datetime
 
 
 def home(request):
-    return render(request, 'index.html')
+    post = Post.objects.first()
+    posts = Post.objects.all()
+    print(posts)
+
+    average_usability = Rating.average_usability(post)
+    average_design = Rating.average_design(post)
+    average_creativity = Rating.average_creativity(post)
+    average_content = Rating.average_content(post)
+    average_mobile = Rating.average_mobile(post)
+    average_rating = Rating.average_rating(post)
+    context = {
+        'posts': posts,
+        'post': post,
+        'average_usability_w': stringify_rating(average_usability)[0],     'average_usability_d': stringify_rating(average_usability)[1],
+        'average_design_w': stringify_rating(average_design)[0],           'average_design_d': stringify_rating(average_design)[1],
+        'average_creativity_w': stringify_rating(average_creativity)[0],   'average_creativity_d': stringify_rating(average_creativity)[1],
+        'average_content_w': stringify_rating(average_content)[0],         'average_content_d': stringify_rating(average_content)[1],
+        'average_mobile_w': stringify_rating(average_mobile)[0],           'average_mobile_d': stringify_rating(average_mobile)[1],
+        'average_rating': average_rating,
+    }
+    return render(request, 'index.html', context)
 
 
 def login(request):
@@ -58,6 +78,24 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 
+def other_profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not request.user.is_authenticated():
+        return redirect("login")
+    try:
+        profile = user.profile
+    except:
+        return redirect('edit_profile')
+
+    posts = user.posts.all()
+    context = {
+        'user': user,
+        'posts': posts,
+        'profile': profile
+    }
+    return render(request, 'profile.html', context)
+
+
 def signup(request):
     if request.method == 'POST':
         form = MyRegistrationForm(request.POST)
@@ -89,7 +127,6 @@ def post_website(request):
                 post = Post.objects.last()
                 post.save_post(user)
                 post.uploaded_from = location
-                print('4estyguhbijnokl')
                 return redirect('profile')
         else:
             pf = WebsitePostForm()
@@ -130,8 +167,22 @@ def rate_website(request, post_id):
         else:
             rf = RatePostForm()
             cf = ReviewCommentForm()
+        pr = Rating.objects.filter(post=post)
+        print([p.usability for p in pr])
 
+        average_usability = Rating.average_usability(post)
+        average_design = Rating.average_design(post)
+        average_creativity = Rating.average_creativity(post)
+        average_content = Rating.average_content(post)
+        average_mobile = Rating.average_mobile(post)
+        average_rating = Rating.average_rating(post)
         context = {
+            'average_usability_w': stringify_rating(average_usability)[0],       'average_usability_d': stringify_rating(average_usability)[1],
+            'average_design_w': stringify_rating(average_design)[0],            'average_design_d': stringify_rating(average_design)[1],
+            'average_creativity_w': stringify_rating(average_creativity)[0],     'average_creativity_d': stringify_rating(average_creativity)[1],
+            'average_content_w': stringify_rating(average_content)[0],           'average_content_d': stringify_rating(average_content)[1],
+            'average_mobile_w': stringify_rating(average_mobile)[0],            'average_mobile_d': stringify_rating(average_mobile)[1],
+            'average_rating_w': stringify_rating(average_rating)[0],            'average_rating_d': stringify_rating(average_rating)[1],
             'rf_form': rf,
             'cf_form': cf,
             'p_user': p_user,
@@ -174,3 +225,12 @@ def edit_profile(request):
         'user': user,
     }
     return render(request, 'profile_edit.html', context)
+
+
+def stringify_rating(rating):
+    r = str(rating).split('.')
+    x = r[1]
+    if len(r[1]) < 2:
+        x += '0'
+
+    return [r[0], x]

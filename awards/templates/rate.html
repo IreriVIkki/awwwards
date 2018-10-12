@@ -31,7 +31,18 @@
     </div>
 
     <div class="m-5 p-5">
-        <h1>{{ post.ratings.average_rating }}</h1>
+        <h1>{{ average_usability_w }}</h1>
+        <h1>{{ average_usability_d }}</h1>
+        <h1>{{ average_design_w }}</h1>
+        <h1>{{ average_design_d }}</h1>
+        <h1>{{ average_creativity_w }}</h1>
+        <h1>{{ average_creativity_d }}</h1>
+        <h1>{{ average_content_w }}</h1>
+        <h1>{{ average_content_d }}</h1>
+        <h1>{{ average_mobile_w }}</h1>
+        <h1>{{ average_mobile_d }}</h1>
+        <h1>{{ average_rating_w }}</h1>
+        <h1>{{ average_rating_d }}</h1>
     </div>
 
     <div>
@@ -45,9 +56,13 @@
     <p>{{ review.review }}</p>
     {% endfor %}
 
+    <p>{{ post.ratings.average_rating }}</p>
+
 
     {% for rating in post.ratings.all %}
-    <p>iterate</p>
+    <p>{{ rating.user }}</p>
+    <p>{{ rating.average_judge_rating }}</p>
+    <p>{{ rating.average_usability }}</p>
     {% endfor %}
 
     <form method="post" enctype="multipart/form-data">

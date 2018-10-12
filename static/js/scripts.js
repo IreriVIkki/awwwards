@@ -22,3 +22,13 @@ $(document).ready(function () {
         $('.site-fade').addClass('site-fade-out');
     });
 });
+
+function getid(obj) {
+    alert(obj.id)
+    return obj.id
+}
+
+function outmouse(obj) {
+    alert(obj.id)
+    return obj.id
+}
