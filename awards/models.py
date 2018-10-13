@@ -21,6 +21,7 @@ class Profile(models.Model):
     profile_photo = models.ImageField(upload_to='images/', blank=True,)
     user_name = models.CharField(max_length=50, null=True)
     occupation = models.CharField(max_length=300, null=True)
+    company_name = models.CharField(max_length=300, null=True)
     user_address = models.ForeignKey(
         Location, null=True, related_name='user_address')
     bio = models.TextField(blank=True)
@@ -108,6 +109,7 @@ class Post(models.Model):
 class Rating(models.Model):
     user = models.ForeignKey(User, related_name='ratings', null=True)
     post = models.ForeignKey(Post, related_name='ratings', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     usability = models.FloatField(default=0.00, null=True)
     design = models.FloatField(default=0.00, null=True)
     creativity = models.FloatField(default=0.00, null=True)
@@ -118,54 +120,125 @@ class Rating(models.Model):
     def average_judge_rating(self, null=True):
         rated = [i for i in [self.usability, self.design,
                              self.creativity, self.content, self.mobile] if i != None]
-        rating = sum(rated[0:len(rated)])/len(rated)
-        return rating
+        if len(rated) == 0:
+            return 0.00
+        else:
+            rating = sum(rated[0:len(rated)])/len(rated)
+            return math.floor(rating * 100)/100.0
 
     @classmethod
     def average_usability(cls, post):
-        post_ratings = cls.objects.filter(post=post)
+        post_ratings = Rating.objects.filter(post=post)
         _all = [ur.usability for ur in post_ratings]
-        average = sum(_all)/len(_all)
-        return math.floor(average * 100)/100.0
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 100)/100.0
+
+    @property
+    def av_usability(self):
+        post_ratings = Rating.objects.filter(post=self.post)
+        _all = [ur.usability for ur in post_ratings]
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 10)/10.0
 
     @classmethod
     def average_design(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.design for ur in post_ratings]
-        average = sum(_all)/len(_all)
-        return math.floor(average * 100)/100.0
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 100)/100.0
+
+    @property
+    def av_design(self):
+        post_ratings = Rating.objects.filter(post=self.post)
+        _all = [ur.design for ur in post_ratings]
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 10)/10.0
 
     @classmethod
     def average_creativity(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.creativity for ur in post_ratings]
-        average = sum(_all)/len(_all)
-        return math.floor(average * 100)/100.0
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 100)/100.0
+
+    @property
+    def av_creativity(self):
+        post_ratings = Rating.objects.filter(post=self.post)
+        _all = [ur.creativity for ur in post_ratings]
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 10)/10.0
 
     @classmethod
     def average_content(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.content for ur in post_ratings]
-        average = sum(_all)/len(_all)
-        return math.floor(average * 100)/100.0
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 100)/100.0
+
+    @property
+    def av_content(self):
+        post_ratings = Rating.objects.filter(post=self.post)
+        _all = [ur.content for ur in post_ratings]
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 10)/10.0
 
     @classmethod
     def average_mobile(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.mobile for ur in post_ratings]
-        average = sum(_all)/len(_all)
-        return math.floor(average * 100)/100.0
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 100)/100.0
+
+    @property
+    def av_mobile(self):
+        post_ratings = Rating.objects.filter(post=self.post)
+        _all = [ur.mobile for ur in post_ratings]
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 10)/10.0
 
     @classmethod
     def average_rating(cls, post):
         post_ratings = cls.objects.filter(post=post)
         _all = [ur.average_judge_rating for ur in post_ratings]
-        average = sum(_all)/len(_all)
-        return math.floor(average * 100)/100.0
+        if len(_all) == 0:
+            return 0.00
+        else:
+            average = sum(_all)/len(_all)
+            return math.floor(average * 100)/100.0
 
-    @classmethod
-    def get_last_post(cls):
-        return cls.objects.last()
+    @property
+    def get_last_post(self):
+        return Rating.objects.last()
 
 
 class Followers(models.Model):
@@ -188,30 +261,36 @@ class Followers(models.Model):
 
 class tags(models.Model):
     post = models.ForeignKey(Post, related_name='tags', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     tag = models.CharField(max_length=50, null=True)
 
 
 class technologies(models.Model):
     post = models.ForeignKey(Post, related_name='technologies', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     tag = models.CharField(max_length=50, null=True)
 
 
 class Comment(models.Model):
     author = models.ForeignKey(User, related_name='comments', null=True)
     post = models.ForeignKey(Post, related_name='comments', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     review = models.TextField(null=True, blank=True)
 
 
 class Collection(models.Model):
     user = models.ForeignKey(User, related_name='collections', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     post = models.ForeignKey(Post)
 
 
 class PostLikes(models.Model):
     user = models.ForeignKey(User, related_name='liked_posts', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     post = models.ForeignKey(Post, related_name='likes', null=True)
 
 
 class CommentsLikes(models.Model):
     user = models.ForeignKey(User, related_name='liked_by', null=True)
+    post_date = models.DateTimeField(auto_now_add=True, null=True)
     comment = models.ForeignKey(Comment, related_name='likes', null=True)

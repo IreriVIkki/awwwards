@@ -142,8 +142,9 @@ def post_website(request):
 
 def rate_website(request, post_id):
     user = request.user
+    posts = Post.objects.all()
     post = Post.objects.get(pk=post_id)
-    post_reviews = Rating.objects.filter(post=post)
+    post_reviews = post.ratings.all()
     judges = list(set([judge.user for judge in post_reviews]))
     if request.user.is_authenticated:
         print(post_id)
@@ -159,7 +160,7 @@ def rate_website(request, post_id):
                 rating.user = user
                 rating.post = post
                 rating.save()
-            if cf.is_valid():
+            if cf.is_valid() and cf.cleaned_data['review'] != '':
                 cf.save()
                 review = Comment.objects.last()
                 review.author = user
@@ -189,7 +190,9 @@ def rate_website(request, post_id):
             'p_user': p_user,
             'user': user,
             'post': post,
-            'judges': judges
+            'posts': posts,
+            'judges': judges,
+            'ratings': post_reviews
         }
         return render(request, 'rate.html', context)
     return redirect('home')

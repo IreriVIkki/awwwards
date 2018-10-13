@@ -24,7 +24,6 @@
                         {% endfor %}
                     </div>
                     <div class="">
-                        <a href="{{ post.site_link }}" class="btn btn-sm badge-pill px-4 btn-success">Visite Site</a>
                         <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
                             <img class="rem-1 w-auto pr-2" src="{% static 'img/like.png' %}" alt="">
                             {{ post.likes.all | length }}</button>
@@ -173,7 +172,6 @@
         <div id="screenshots" class="container-fluid mb-5 mx-5 px-5 mx-auto">
             <a href="#">
                 <div class="w-100">
-                    <!-- ****************************************************** -->
                     <img class="w-100" src="{{ post.screenshot_1.url }}" alt="">
                 </div>
             </a>
@@ -202,57 +200,84 @@
         </div>
 
 
-        <div id="ratings" class="container-fluid mb-5 mx-5 px-5 mx-auto text-white-50">
+        <div id="ratings" class="container-fluid mb-5 mx-5 mt-3 px-5 mx-auto text-white-50">
             <div class="votes-title card-bg row mx-0 px-0 py-4 mb-1 d-flex align-items-center">
                 <div class="col-md-1 f-14">
                     <p class="mb-0">VOTES</p>
                 </div>
                 <div class="col-md-1 f-14 d-flex">
-                    <p class="mb-0">15</p>
+                    <p class="mb-0">{{ judges | length }}</p>
+                    <!-- ****************************************************** -->
+                    {% if judges.count is 1 %}
+                    <p class="mb-0 pl-1">JUDGE</p>
+                    {% else %}
                     <p class="mb-0 pl-1">JUDGES</p>
+                    {% endif %}
                 </div>
                 <div class="col-md-1 f-14 d-flex">
-                    <p class="mb-0">52</p>
+                    <p class="mb-0">{{ judges | length }}</p>
+                    {% if judges.count is 1 %}
+                    <p class="mb-0 pl-1">USER</p>
+                    {% else %}
                     <p class="mb-0 pl-1">USERS</p>
+                    {% endif %}
                 </div>
                 <div class="col-md-8 f-14"></div>
                 <div class="col-md-1 f-14">
-                    <img class="md-icon d-flex mx-auto" src="/info.png" alt="">
+                    <img class="md-icon d-flex mx-auto" src="{% static 'img/info.png' %}" alt="">
                 </div>
             </div>
 
+            {% for rating in ratings %}
             <div class="votes-title card-bg row mx-0 px-0 py-3 mb-1 d-flex align-items-center">
                 <div class="col-md-1 f-14">
                     <div class="rounded-circle judge-rating-ppic">
-                        <img class="h-100" src="/person3.jpg" alt="">
+                        <img class="h-100" src="{{ rating.user.profile.profile_photo.url }}" alt="">
                     </div>
                 </div>
                 <div class="col-md-6 pl-0 f-14">
                     <p class="mb-0 ">
-                        <span>Meisa Malala</span>
-                        <span>from</span>
-                        <span>Georgia</span>
+                        <span class="font-weight-bold">{{ rating.user.profile.user_name }}</span>
+                        <span class="font-italic">from</span>
+                        {% if rating.user.profile.country %}
+                        <span class="font-weight-bold">{{ rating.user.profile.country }}</span>
+                        {% else %}
+                        <span class="font-weight-bold">
+                            Awwwards
+                        </span>
+                        {% endif %}
                     </p>
                     <p class="mb-0">
-                        <span>Company,</span>
-                        <span>Position occupied</span>
+                        {% if rating.user.profile.company_name %}
+                        <span>{{ rating.user.profile.company_name }},</span>
+                        {% endif %}
+                        {% if rating.user.profile.occupation %}
+                        <span>{{ rating.user.profile.occupation }},</span>
+                        {% endif %}
+                        {% if not rating.user.profile.occupation and rating.user.profile.company_name %}
+                        <a href="http://localhost:8000/userdetails/">
+                            <span>
+                                {{ rating.user.profile.user_name}}/awwwads_profile
+                            </span>
+                        </a>
+                        {% endif %}
                     </p>
                 </div>
                 <div class="col-md-3 pl-0 d-flex justify-content-end">
-                    <div class="mr-2 border rounded-circle judge-rating border-info d-flex justify-content-center align-items-center">
-                        <span class="pt-2 pb-1 px-2 f-24">7</span>
+                    <div class="mr-2 border rounded-circle judge-rating border-danger d-flex justify-content-center align-items-center">
+                        <span class="pt-2 pb-1 px-2 f-12 text-danger">{{ rating.design }}</span>
+                    </div>
+                    <div class="mr-2 border rounded-circle judge-rating border-warning d-flex justify-content-center align-items-center">
+                        <span class="pt-2 pb-1 px-2 f-12 text-warning">{{ rating.usability }}</span>
+                    </div>
+                    <div class="mr-2 border rounded-circle judge-rating border-success d-flex justify-content-center align-items-center">
+                        <span class="pt-2 pb-1 px-2 f-12 text-success">{{ rating.creativity }}</span>
                     </div>
                     <div class="mr-2 border rounded-circle judge-rating border-info d-flex justify-content-center align-items-center">
-                        <span class="pt-2 pb-1 px-2 f-24">7</span>
+                        <span class="pt-2 pb-1 px-2 f-12 text-info">{{ rating.content }}</span>
                     </div>
-                    <div class="mr-2 border rounded-circle judge-rating border-info d-flex justify-content-center align-items-center">
-                        <span class="pt-2 pb-1 px-2 f-24">7</span>
-                    </div>
-                    <div class="mr-2 border rounded-circle judge-rating border-info d-flex justify-content-center align-items-center">
-                        <span class="pt-2 pb-1 px-2 f-24">7</span>
-                    </div>
-                    <div class="mr-2 border rounded-circle judge-rating border-info d-flex justify-content-center align-items-center">
-                        <span class="pt-2 pb-1 px-2 f-24">7</span>
+                    <div class="mr-2 border rounded-circle judge-rating border-secondary d-flex justify-content-center align-items-center">
+                        <span class="pt-2 pb-1 px-2 f-12 text-secondary">{{ rating.mobile }}</span>
                     </div>
                 </div>
                 <div class="col-md-1 pl-0">
@@ -261,184 +286,221 @@
                             <p class="f-12 font-weight-bold mb-0">JURY</p>
                         </div>
                         <div>
-                            <img class="sm-icon" src="/fp.png" alt="">
+                            <img class="sm-icon" src="{% static 'img/fp.png' %}" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="col-md-1 pl-0 average-rating">
-                    <p class="mb-0 f-24">7.00</p>
+                    <p class="mb-0 f-24">{{ rating.average_judge_rating }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="votes-title bg-info rounded text-white">
+
+                <div class="row mx-0 px-0 py-3 d-flex align-items-center ">
+                    <div class="col-md-1 f-14">
+                        <div class="rounded-circle judge-rating-ppic">
+                            <img class="h-100" src="{{ user.profile.profile_photo.url }}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl-0 f-14">
+                        <p class="mb-0 ">
+                            <span class="font-weight-bold">{{ user.profile.user_name }}</span>
+                            <span class="font-italic">from</span>
+                            {% if user.profile.country %}
+                            <span class="font-weight-bold">{{ user.profile.country }}</span>
+                            {% else %}
+                            <span class="font-weight-bold">
+                                Awwwards
+                            </span>
+                            {% endif %}
+                        </p>
+                        <p class="mb-0">
+                            {% if user.profile.company_name %}
+                            <span>{{ user.profile.company_name }},</span>
+                            {% endif %}
+                            {% if user.profile.occupation %}
+                            <span>{{ user.profile.occupation }},</span>
+                            {% endif %}
+                            {% if not user.profile.occupation and user.profile.company_name %}
+                            <a href="http://localhost:8000/userdetails/">
+                                <span>
+                                    {{ user.profile.user_name}}/awwwads_profile
+                                </span>
+                            </a>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-3 pl-0 d-flex justify-content-end">
+
+                    </div>
+                    <div class="col-md-1 pl-0">
+                        <div class="d-flex-block border btn-outline-white-50 text-center mx-2 py-2">
+                            <div>
+                                <p class="f-12 font-weight-bold mb-0 text-white">JURY</p>
+                            </div>
+                            <div>
+                                <img class="sm-icon" src="{% static 'img/fp.png' %}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1 pl-0 average-rating">
+                        <p class="mb-0 f-24">{{ rating.average_judge_rating }}</p>
+                    </div>
+                </div>
+                <div class="border-bottom btn-outline-white-50 mx-4"></div>
+                <div class="">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row m-0 px-2 py-4 d-flex justfy-content-center">
+                            <div class="col-md-2 mx-auto d-inline-flex form-group mb-0 px-2 d-flex align-items-center">
+                                <label class="form-control-sm f-16 mb-0" for="id_usability">usability:</label>
+                                <input class="form-inline-flex form-control mb-0 rating-input-width" type="text" name="usability"
+                                    id="id_usability" required placeholder="0.00" />
+                            </div>
+                            <div class="col-md-2 mx-auto d-inline-flex form-group mb-0 px-2 d-flex align-items-center">
+                                <label class="form-control-sm f-16 mb-0" for="id_creativity">creativity:</label>
+                                <input class="form-inline-flex form-control mb-0 rating-input-width" type="creativity"
+                                    name="creativity" id="id_creativity" required placeholder="0.00" />
+                            </div>
+                            <div class="col-md-2 mx-auto d-inline-flex form-group mb-0 px-2 d-flex align-items-center">
+                                <label class="form-control-sm f-16 mb-0" for="id_design">design:</label>
+                                <input class="form-inline-flex form-control mb-0 rating-input-width" type="design" name="design"
+                                    id="id_design" required placeholder="0.00" />
+                            </div>
+                            <div class="col-md-2 mx-auto d-inline-flex form-group mb-0 px-2 d-flex align-items-center">
+                                <label class="form-control-sm f-16 mb-0" for="id_content">content:</label>
+                                <input class="form-inline-flex form-control mb-0 rating-input-width" type="content"
+                                    name="content" id="id_content" required placeholder="0.00" />
+                            </div>
+                            <div class="col-md-2 mx-auto d-inline-flex form-group mb-0 px-2 d-flex align-items-center">
+                                <label class="form-control-sm f-16 mb-0" for="id_mobile">mobile:</label>
+                                <input class="form-inline-flex form-control mb-0 rating-input-width" type="mobile" name="mobile"
+                                    id="id_mobile" required placeholder="0.00" />
+                            </div>
+                        </div>
+                        <div class="border-bottom btn-outline-white-50 mx-4"></div>
+                        <div id="comment-post" class="row m-0 px-2 py-4 d-flex justfy-content-center">
+                            <div class="col-md-12 form-group mx-auto mx-2 ">
+                                <div>
+                                    <label class="form-control-sm f-16 mb-0" for="id_review">
+                                        {{ post.comments.all | length }} comments
+                                    </label>
+                                </div>
+                                <div class="d-inline-flex w-100 mx-auto">
+                                    <textarea class="form-inline form-control mb-0 rating-input-width w-75" type="review"
+                                        name="review" id="id_review" placeholder="Add a review for this post"></textarea>
+                                    <button class="btn btn-secodary px-5 ml-5" type="submit">Post comment</button>
+                                </div>
+                                <div>
+                                    {% if post.comments.all.count is 0 %}
+                                    <label for="" class="form-control-sn f-24 mb-0">Be the first to comment</label>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
+        {% for review in post.comments.all %}
+        <p>{{ review.review }}</p>page
+        {% endfor %}
 
-        <div class="mx-5">
-            <div class="title py-5 d-flex">
-                <div class="row-right d-flex mr-auto">
-                    <span class="f-16 light-grey font-weight-bold letter-space-1">Sites Of The Day</span>
-                    <span class="f-16 text-white-50 ml-2">Previous Winners</span>
+
+        <br><br>
+        <hr>
+        <br><br>
+
+        <div class="container-fluid bg-darkgrey">
+            <div class="mx-5">
+                <div class="title py-5 d-flex">
+                    <div class="row-right d-flex mr-auto">
+                        <span class="f-16 light-grey font-weight-bold letter-space-1">Sites Of The Day</span>
+                        <span class="f-16 text-white-50 ml-2">Previous Winners</span>
+                    </div>
+                    <div class="row-left ml-auto d-flex">
+                        <span class="f-16 light-grey font-weight-bold letter-space-1">Mobile Excelence</span>
+                        <span class="f-16 text-white-50 ml-2">recorgonized by Google</span>
+                    </div>
                 </div>
-                <div class="row-left ml-auto d-flex">
-                    <span class="f-16 light-grey font-weight-bold letter-space-1">Mobile Excelence</span>
-                    <span class="f-16 text-white-50 ml-2">recorgonized by Google</span>
-                </div>
-            </div>
-            <div id="row-content" class="row m-0 p-0 d-flex justify-content-between">
-                <div class="cus-col-md-4 px-0">
-                    <div id="site-box" class="card card-bg ">
-                        <div id="site-image-box" class="">
-                            <div class="site-img">
-                                <img class="card-img-top img-hoverin" src="/cardimg1.jpg" alt="">
-                                <div class="site-fade site-fade-out">
-                                    <div class="h-100 p-3 d-flex flex-column">
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-sm btn-outline-secondary badge-pill">11</button>
-                                            <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
+                <div id="row-content" class="row m-0 p-0 d-flex justify-content-between">
+
+
+
+                    {% for pod in posts %}
+
+                    <div class="cus-col-md-4 px-0" id="id{{ pod.id }}" onmouseover="getid(this.id);" onmouseout="outmouse(this.id);">
+                        <div id=" site-box" class="card card-bg ">
+                            <a href="rate/post/{{ pod.id }}">
+                                <div id="site-image-box" class="">
+                                    <div class="site-img">
+                                        <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
+                                        <div class="site-fade site-fade-out" id="fadeid{{ pod.id }}">
+                                            <div class="h-100 p-3 d-flex flex-column">
+                                                <div class="d-flex justify-content-end">
+                                                    <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                                                        <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
+                                                            alt="">
+                                                        {{ pod.likes.all | length }}</button>
+                                                    <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
+                                                </div>
+                                                <div class="d-flex justify-content-end mt-auto">
+                                                    <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
+                                                        <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}"
+                                                            alt="">
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="d-flex justify-content-end mt-auto">
-                                            <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
-                                                <img class="h-100 p-1" src="/share-arrow.png" alt="">
-                                            </button>
-                                        </div>
                                     </div>
+                                </div>
+                            </a>
+                            <div id="site-content-box" class="container p-3">
+                                <div class="pb-4">
+                                    <a class="mb-0 text-white-50 nav-link pl-0" href="">{{ pod.name }}</a>
+                                </div>
+                                <div class="d-flex pb-4 border-bottom border-secondary">
+                                    <span class="text-secondary letter-space-1 f-12 mr-auto">From {{pod.uploaded_from
+                                        }}</span>
+                                    <span class="text-secondary letter-space-1 f-12">{{pod.post_date | date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                            <div id="site-footer-box" class="container p-3 d-flex">
+                                <div id="footer-left" class="d-flex align-items-center mr-auto">
+                                    <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
+                                        <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
+                                            alt="">
+                                    </a>
+                                    <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
+                                        <span class="pr-1">By </span>
+                                        <span class="font-weight-bold">{{ pod.uploaded_by.profile.user_name }}</span>
+                                    </a>
+                                </div>
+                                <div id="footer-right">
+                                    <span class="btn badge-pill" id="HM"></span>
+                                    <span class="btn badge-pill" id="DEV"></span>
+                                    <span class="btn badge-pill" id="SOTD"></span>
                                 </div>
                             </div>
                         </div>
-                        <div id="site-content-box" class="container p-3">
-                            <div class="pb-4">
-                                <a class="mb-0 text-white-50" href="">HKI Paris</a>
-                            </div>
-                            <div class="d-flex pb-4 border-bottom border-secondary">
-                                <span class="text-secondary letter-space-1 f-12 mr-auto">From France</span>
-                                <span class="text-secondary letter-space-1 f-12">October 08, 2018</span>
-                            </div>
-                        </div>
-                        <div id="site-footer-box" class="container p-3 d-flex">
-                            <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
-                                    <img class="h-100 judge-btn" src="/person3.jpg" alt="">
-                                </a>
-                                <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
-                                    <span class="pr-1">By </span>
-                                    <span class="font-weight-bold">HKI Paris</span>
-                                </a>
-                            </div>
-                            <div id="footer-right">
-                                <span class="btn badge-pill" id="HM"></span>
-                                <span class="btn badge-pill" id="DEV"></span>
-                                <span class="btn badge-pill" id="SOTD"></span>
-                            </div>
-                        </div>
                     </div>
-                </div>
-
-                <div class="cus-col-md-4 px-0">
-                    <div id="site-box" class="card card-bg ">
-                        <div id="site-image-box" class="">
-                            <div class="site-img">
-                                <div class="absolute-fade light-fade"></div>
-                                <img class="card-img-top" src="/cardimg1.jpg" alt="">
-                                <div class="site-img-overlay h-100 p-3 d-flex flex-column">
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-secondary badge-pill">11</button>
-                                        <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
-                                    </div>
-                                    <div class="d-flex justify-content-end mt-auto">
-                                        <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
-                                            <img class="h-100 p-1" src="/share-arrow.png" alt="">
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="site-content-box" class="container p-3">
-                            <div class="pb-4">
-                                <a class="mb-0 text-white-50" href="">HKI Paris</a>
-                            </div>
-                            <div class="d-flex pb-4 border-bottom border-secondary">
-                                <span class="text-secondary letter-space-1 f-12 mr-auto">From France</span>
-                                <span class="text-secondary letter-space-1 f-12">October 08, 2018</span>
-                            </div>
-                        </div>
-                        <div id="site-footer-box" class="container p-3 d-flex">
-                            <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
-                                    <img class="h-100 judge-btn" src="/person3.jpg" alt="">
-                                </a>
-                                <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
-                                    <span class="pr-1">By </span>
-                                    <span class="font-weight-bold">HKI Paris</span>
-                                </a>
-                            </div>
-                            <div id="footer-right">
-                                <span class="btn badge-pill" id="HM"></span>
-                                <span class="btn badge-pill" id="DEV"></span>
-                                <span class="btn badge-pill" id="SOTD"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cus-col-md-4 px-0">
-                    <div id="site-box" class="card card-bg ">
-                        <div id="site-image-box" class="">
-                            <div class="site-img">
-                                <div class="absolute-fade light-fade"></div>
-                                <img class="card-img-top" src="/cardimg1.jpg" alt="">
-                                <div class="site-img-overlay h-100 p-3 d-flex flex-column">
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-sm btn-outline-secondary badge-pill">11</button>
-                                        <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
-                                    </div>
-                                    <div class="d-flex justify-content-end mt-auto">
-                                        <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
-                                            <img class="h-100 p-1" src="/share-arrow.png" alt="">
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="site-content-box" class="container p-3">
-                            <div class="pb-4">
-                                <a class="mb-0 text-white-50" href="">HKI Paris</a>
-                            </div>
-                            <div class="d-flex pb-4 border-bottom border-secondary">
-                                <span class="text-secondary letter-space-1 f-12 mr-auto">From France</span>
-                                <span class="text-secondary letter-space-1 f-12">October 08, 2018</span>
-                            </div>
-                        </div>
-                        <div id="site-footer-box" class="container p-3 d-flex">
-                            <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
-                                    <img class="h-100 judge-btn" src="/person3.jpg" alt="">
-                                </a>
-                                <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
-                                    <span class="pr-1">By </span>
-                                    <span class="font-weight-bold">HKI Paris</span>
-                                </a>
-                            </div>
-                            <div id="footer-right">
-                                <span class="btn badge-pill" id="HM"></span>
-                                <span class="btn badge-pill" id="DEV"></span>
-                                <span class="btn badge-pill" id="SOTD"></span>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <div class="m-5 p-5"></div>
+        <br><br><br><br><br>
+        <div class="p-5"></div>
     </div>
 </section>
-<br><br><br><br><br>
 
-<div class="row p-0 m-0">
-
+<!-- 
     <div class="col-lg-6 col-md-6 col-sm-6">
 
-        <h4>Account Details</h4>
+        <h4>Account Details</h4> -->
 
-        <hr>
+<!-- <hr>
 
         <dl class="dl-horizontal">
             <dt>Username</dt>
@@ -458,64 +520,9 @@
         </dl>
 
     </div>
-
-    <div class="m-5 p-5">
-        <h1>{{ average_usability_w }}</h1>
-        <h1>{{ average_usability_d }}</h1>
-        <h1>{{ average_design_w }}</h1>
-        <h1>{{ average_design_d }}</h1>
-        <h1>{{ average_creativity_w }}</h1>
-        <h1>{{ average_creativity_d }}</h1>
-        <h1>{{ average_content_w }}</h1>
-        <h1>{{ average_content_d }}</h1>
-        <h1>{{ average_mobile_w }}</h1>
-        <h1>{{ average_mobile_d }}</h1>
-        <h1>{{ average_rating_w }}</h1>
-        <h1>{{ average_rating_d }}</h1>
-    </div>
-
-    <div>
-        <p>{{ post.name }}</p>
-        <div class="container w-100">
-            <img class="w-100" src="{{ post.landing_image.url }}" alt="">
-        </div>
-    </div>
-
-    {% for review in post.comments.all %}
-    <p>{{ review.review }}</p>
-    {% endfor %}
-
-    <p>{{ post.ratings.average_rating }}</p>
+ -->
 
 
-    {% for rating in post.ratings.all %}
-    <p>{{ rating.user }}</p>
-    <p>{{ rating.average_judge_rating }}</p>
-    <p>{{ rating.average_usability }}</p>
-    {% endfor %}
 
-    <form method="post" enctype="multipart/form-data">
-
-        {% csrf_token %}
-
-        {{ rf_form.as_p }}
-
-        <br><br><br><br>
-
-        {{ cf_form.as_p }}
-        <button type="submit">Post Review</button>
-    </form>
-
-    <div class="col-lg-6 col-md-6 col-sm-6">
-        <h4>Related Links</h4>
-        <p>
-            <a href="">My Pastes</a> <br>
-            <a href="">Settings</a> <br>
-            <a href="">Change Password.</a> <br>
-            <a href="{% url 'logout' %}">Logout.</a> <br>
-        </p>
-    </div>
-
-</div>
 
 {% endblock %}

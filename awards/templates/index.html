@@ -142,13 +142,13 @@
 
                 {% for pod in posts %}
 
-                <div class="cus-col-md-4 px-0" id="id{{ post.name }}" onmouseover="getid(this);" onmouseout="outmouse(this);">
+                <div class="cus-col-md-4 px-0" id="id{{ pod.id }}" onmouseover="getid(this.id);" onmouseout="outmouse(this.id);">
                     <div id=" site-box" class="card card-bg ">
-                        <a href="rate/post/{{ post.id }}">
+                        <a href="rate/post/{{ pod.id }}">
                             <div id="site-image-box" class="">
                                 <div class="site-img">
                                     <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
-                                    <div class="site-fade site-fade-out">
+                                    <div class="site-fade site-fade-out" id="fadeid{{ pod.id }}">
                                         <div class="h-100 p-3 d-flex flex-column">
                                             <div class="d-flex justify-content-end">
                                                 <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
@@ -169,21 +169,22 @@
                         </a>
                         <div id="site-content-box" class="container p-3">
                             <div class="pb-4">
-                                <a class="mb-0 text-white-50" href="">HKI Paris</a>
+                                <a class="mb-0 text-white-50 nav-link pl-0" href="">{{ pod.name }}</a>
                             </div>
                             <div class="d-flex pb-4 border-bottom border-secondary">
-                                <span class="text-secondary letter-space-1 f-12 mr-auto">From France</span>
-                                <span class="text-secondary letter-space-1 f-12">October 08, 2018</span>
+                                <span class="text-secondary letter-space-1 f-12 mr-auto">From {{pod.uploaded_from }}</span>
+                                <span class="text-secondary letter-space-1 f-12">{{pod.post_date | date:"M d, Y" }}</span>
                             </div>
                         </div>
                         <div id="site-footer-box" class="container p-3 d-flex">
                             <div id="footer-left" class="d-flex align-items-center mr-auto">
                                 <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
-                                    <img class="h-100 judge-btn" src="{% static 'img/person3.jpg' %}" alt="">
+                                    <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
+                                        alt="">
                                 </a>
                                 <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
                                     <span class="pr-1">By </span>
-                                    <span class="font-weight-bold">HKI Paris</span>
+                                    <span class="font-weight-bold">{{ pod.uploaded_by.profile.user_name }}</span>
                                 </a>
                             </div>
                             <div id="footer-right">

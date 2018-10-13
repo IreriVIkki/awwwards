@@ -12,23 +12,18 @@ $(document).ready(function () {
     });
 
     // hover over individual website box
-    $('.site-img').hover(function () {
-        // over
-        $('.site-fade').addClass('site-fade-in');
-        $('.site-fade').removeClass('site-fade-out');
-    }, function () {
-        // out
-        $('.site-fade').removeClass('site-fade-in');
-        $('.site-fade').addClass('site-fade-out');
-    });
 });
 
-// function getid(obj) {
-//     alert(obj.id)
-//     return obj.id
-// }
+function getid(fadeId) {
+    // over
+    let fade = '#fade' + fadeId
+    $(fade).addClass('site-fade-in');
+    $(fade).removeClass('site-fade-out');
+}
 
-// function outmouse(obj) {
-//     alert(obj.id)
-//     return obj.id
-// }
+function outmouse(fadeId) {
+    // out
+    let fade = '#fade' + fadeId
+    $(fade).removeClass('site-fade-in');
+    $(fade).addClass('site-fade-out');
+};
