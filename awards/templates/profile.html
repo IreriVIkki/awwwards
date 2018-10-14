@@ -134,14 +134,16 @@
                                 </div>
                                 <div id="site-footer-box" class="container p-3 d-flex">
                                     <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
+                                        <a href="/userdetails/{{ pod.uploaded_by.id }}/{{ pod.uploaded_by.profile.user_name }}"
+                                            class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
                                             <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
                                                 alt="">
                                             <section class="user-posts">
 
                                             </section>
                                         </a>
-                                        <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
+                                        <a href="/userdetails/{{ pod.uploaded_by.id }}/{{ pod.uploaded_by.profile.user_name }}"
+                                            id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase">
                                             <span class="pr-1">By </span>
                                             <span class="font-weight-bold">{{ pod.uploaded_by.profile.user_name }}</span>
                                         </a>
@@ -217,7 +219,8 @@
                                 </div>
                                 <div id="site-footer-box" class="container p-3 d-flex">
                                     <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
+                                        <a href="/userdetails/{{ pod.uploaded_by.id }}/{{ pod.uploaded_by.profile.user_name }}"
+                                            class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
                                             <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
                                                 alt="">
                                             <section class="user-posts">
@@ -233,7 +236,7 @@
                                         <span class="btn badge-pill" id="HM"></span>
                                         <span class="btn badge-pill" id="DEV"></span>
                                         <span class="btn badge-pill" id="SOTD"></span>
-                                    </div>
+                                    </div>auto
                                 </div>
                             </div>
                         </div>
@@ -244,10 +247,10 @@
         </section>
         {% endif %}
         <section class="contact-info">
-            <div class="container-fliud px-0 card-bg mt-5 py-5 footer d-flex flex-column">
-                <div class="d-flex w-25 flex-column mx-auto">
-                    <h2 class="d-inline-flex">Contanct {{ user.profile.name }}</h2>
-
+            <div class="container-fliud px-0 card-bg mt-5 py-5 footer d-flex row mx-0">
+                <div class="col-md-3"></div>
+                <div class="d-flex col-md-3 flex-column mx-auto mt-5 flex-column">
+                    <h2 class="d-inline-flex">Contant {{ user.profile.name }}</h2>
                     If you would like to connect with {{ user.divrofile.name }}, email
                     {{user.profile.email}} or call them at {{ user.profile.phone }}
                     Add
@@ -256,89 +259,29 @@
                     {% elif user.profile.gender is 'Female' %}her
                     {% else %}them {% endif %} on social media with the links below
                     <div class="d-inline">
-
                         <a class="text-primary" href="https://{{ user.profile.linkedin }}"> LinkedIn</a>,
                         <a class="text-twitter" href="https://{{ user.profile.twitter }}">Twitter</a>,
                         <a class="text-primary" href="https://{{ user.profile.facebook }}">Facebook</a>
                         or
                         <a class="text-primary" href="https://{{ user.profile.instagram }}">Instagram</a>
                     </div>
+                    {% if user.profile.coutry %}
+                    {{ user.profile.user_nane }} currently resides in {{ user.profile.country }}, reach out if you can
+                    {% endif %}
                 </div>
+                <div class="d-flex col-md-5 flex-column mx-auto mt-5">
+                    <h1>Related Links</h1>
+                    <p>
+                        <a href="{% url 'edit_profile' %}">Edit Profile</a> <br>
+                        <a href="{% url 'logout' %}">Logout.</a> <br>
+                    </p>
+                </div>
+                <div class="col-md-3"></div>
 
-                <p>
-
-                </p>
             </div>
         </section>
     </div>
 
 </section>
-
-
-<div class="row p-0 m-0">
-
-    <div class="col-lg-6 col-md-6 col-sm-6">
-
-        <h4>Account Details</h4>
-
-        {% if request.user.is_superuser %}
-
-        <a href="http://127.0.0.1:8000/admin/">admin</a>
-
-        {% endif %}
-
-        <a href="{% url 'edit_profile' %}"></a>
-        <h1>{{ user.profile.user_name }}</h1>
-
-        <div class="container d-flex text-center">
-            <div class="w-50 mx-auto">
-                <img class="img-fluid" src="{{ user.profile.profile_photo.url }}" alt="">
-            </div>
-        </div>
-
-        <hr>
-
-
-        <dl class="dl-horizontal">
-            <dt>Username</dt>
-            <dd>{{ request.user.username }}</dd>
-
-            <dt>Email</dt>
-            <dd>{{ request.user.email }}</dd>
-
-            <dt>Date Joined</dt>
-            <dd>{{ request.user.date_joined }}</dd>
-
-            <dt>Last Login</dt>
-            <dd>{{ request.user.last_login }}</dd>
-
-            <dt>Snippet created</dt>
-            <dd>{{ request.user.profile.get_snippet_count }}</dd>
-        </dl>
-
-    </div>
-
-
-    <div>
-        {% for post in posts %}
-        <p>{{ post.name }}</p>
-        <div class="container w-100">
-            <img class="w-100" src="{{ post.landing_image.url }}" alt="">
-        </div>
-        <a href="/rate/post/{{post.id}}">rate post</a>
-        {% endfor %}
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-6">
-        <h4>Related Links</h4>
-        <p>
-            <a href="">My Pastes</a> <br>
-            <a href="{% url 'edit_profile' %}">Edit Profile</a> <br>
-            <a href="">Change Password.</a> <br>
-            <a href="{% url 'logout' %}">Logout.</a> <br>
-        </p>
-    </div>
-
-</div>
 
 {% endblock %}

@@ -53,10 +53,16 @@
                             <img id="img-icon" src="{% static 'img/meubars.png' %}" alt="">
                         </span>
                         <h6 class="mb-0 pr-4 f-12">MENU</h6>
-                        <div class="pl-4 h-100 border-left border-dark d-flex align-items-center">
-                            <a class="mb-0" id="search-button">
-                                <img id="img-icon" src="{% static 'img/search.png' %}" alt="">
-                            </a>
+                        <div class="pl-4 h-100 border-left border-dark  d-flex align-items-center">
+                            <form class="d-flex justify-items-center" action="{% url 'search_results' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <a class="mb-0 d-flex align-items-center" id="search-button">
+                                    <img id="img-icon" src="{% static 'img/search.png' %}" alt="">
+                                    <input class="form-control input-height border-0 ml-2 bg-transparent text-white"
+                                        type="text" placeholder="Search" name="post">
+                                </a>
+                                <button class="btn btn-sm d-none" type="submit"></button>
+                            </form>
                         </div>
                     </div>
                     <div id="center" class="d-flex align-items-center">
@@ -66,7 +72,7 @@
                     </div>
                     <div id="login-submit" class="d-flex align-items-center w-25">
                         {% if user.is_authenticated %}
-                        <div class="f-12 font-weight-bold mr-3 ml-auto text-white-50 d-flex"></a>
+                        <div class="f-12 font-weight-bold mx-2 px-1  ml-auto text-white-50 d-flex"></a>
                             <a class="nav-link text-white-50" href="/userdetails/{{ user.id }}/{{ user.username }}">
                                 <span class="">Profile</span>
                             </a>
@@ -74,7 +80,7 @@
                                 <img class="h-100 judge-btn" src="{{ user.profile.profile_photo.url }}" alt="">
                             </a>
                         </div>
-                        <a class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50" href="{% url 'logout'%}">logout</a>
+                        <a class="f-12 font-weight-bold mx-2 px-1 ml-auto nav-link text-white-50" href="{% url 'logout'%}">logout</a>
 
                         {% else %}
                         <a href="{% url 'login' %}" class="f-12 font-weight-bold mr-3 ml-auto nav-link text-white-50">REGISTER

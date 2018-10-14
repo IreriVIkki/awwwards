@@ -17,15 +17,12 @@ class Location(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, related_name='profile')
-    name = models.CharField(max_length=50)
     first_name = models.CharField(max_length=50, null=True)
     last_name = models.CharField(max_length=50, null=True)
-    profile_photo = models.ImageField(upload_to='images/', blank=True,)
+    profile_photo = models.ImageField(upload_to='images/', blank=True,default='dwf_profile.jpg')
     user_name = models.CharField(max_length=50, null=True)
     occupation = models.CharField(max_length=300, null=True)
     company_name = models.CharField(max_length=300, null=True)
-    user_address = models.ForeignKey(
-        Location, null=True, related_name='user_address')
     bio = models.TextField(blank=True)
     website = models.CharField(max_length=150, null=True)
     facebook = models.CharField(max_length=200, null=True)
@@ -65,7 +62,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     uploaded_by = models.ForeignKey(User, null=True, related_name='posts')
-    uploaded_from = models.ForeignKey(Location, null=True)
+    country = models.CharField(max_length=50, null=True)
     name = models.CharField(max_length=200, null=True)
     landing_image = models.ImageField(upload_to='site-images/', null=True)
     screenshot_1 = models.ImageField(upload_to='site-images/', null=True)
@@ -81,12 +78,14 @@ class Post(models.Model):
     is_mow = models.BooleanField(default=False)
     is_ds = models.BooleanField(default=False)
 
-    def all_posts(self):
-        all_posts = self.objects.all()
+    @classmethod
+    def all_posts(cls):
+        all_posts = cls.objects.all()
         return all_posts
 
-    def filter_by_search_term(self, search_term):
-        return self.objects.filter(description__icontains=search_term)
+    @classmethod
+    def filter_by_search_term(cls, search_term):
+        return cls.objects.filter(description__icontains=search_term)
 
     def get_user_profile(self, post):
         posts = self.objects.filter(uploaded_by=post.uploaded_by)

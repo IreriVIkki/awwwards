@@ -3,29 +3,151 @@
 
 {% block content %}
 
-<div class="row p-0 m-0">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
 
-        <a href="{% url 'profile' %}"></a>
-        <hr>
+<div class="login-bg text-white-50 row mx-0">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 my-5 px-5 ">
+        <div class="py-4">
+            <h4>
+                <span>Add your website to be reviwed by the best jury</span>
+            </h4>
+        </div>
 
-        {% if messages %}
-        {% for message in messages %}
-        <p class="alert alert-info">{{ message }}</p>
-        {% endfor %}
-        {% endif %}
-        <form method="post" enctype="multipart/form-data">
+        <div class="errors">
+            {% if messages %}
+            {% for message in messages %}
+            <p class="alert alert-info">{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
 
-            {% csrf_token %}
+        <div class="login-form">
+            <form method="post" enctype="multipart/form-data">
 
-            {{ pf_form.as_p }}
-            {{ lf_form.as_p }}
-            <button type="submit">Upload</button>
-        </form>
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="my-3 d-flex form-group">
+                        {{ form.name.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_name">Name of your website</label>
+                        </div>
+                        <div class="w-75">
+                            <input class="form-control py-4" type="text" name="name" id="id_name" required placeholder="Website name" />
+                        </div>
+                    </div>
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.landing_image.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_landing_image">Main photo for your Website</label>
+                        </div>
+                        <div class="w-75">
+                            <label class="btn btn-success px-4">
+                                Choose File <input class="opacity-0" id="id_landing_image" name="landing_image" type="file"
+                                    hidden required>
+                            </label>
+                        </div>
+                    </div>
+
+                    <h2 class="c-blue my-4">Add More Screenshots of Your website</h2>
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.screenshot_1.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_screenshot_1">Screenshot One</label>
+                        </div>
+                        <div class="w-75">
+                            <label class="btn btn-success px-4">
+                                Choose File <input class="opacity-0" id="id_screenshot_1" name="screenshot_1" type="file"
+                                    hidden required>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.screenshot_2.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_screenshot_2">Screenshot Two</label>
+                        </div>
+                        <div class="w-75">
+                            <label class="btn btn-success px-4">
+                                Choose File <input class="opacity-0" type="file" hidden name="screenshot_2" required id="id_screenshot_2">
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.screenshot_3.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_screenshot_3">Screenshot Three</label>
+                        </div>
+                        <div class="w-75">
+                            <label class="btn btn-success px-4">
+                                Choose File <input class="opacity-0" id="id_screenshot_3" name="screenshot_3" type="file"
+                                    hidden required>
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.screenshot_4.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_screenshot_4">Screenshot Four</label>
+                        </div>
+                        <div class="w-75">
+                            <label class="btn btn-success px-4">
+                                Choose File <input class="opacity-0" id="id_screenshot_4" name="screenshot_4" type="file"
+                                    hidden required>
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.description.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_description">Describe what your website is about</label>
+                        </div>
+                        <div class="w-75">
+                            <textarea rows="4" class="form-control py-4" type="text" name="description" id="id_description"
+                                required placeholder="Tell us about your website"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.site_link.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_site_link">Add link to your website</label>
+                        </div>
+                        <div class="w-75">
+                            <input class="form-control py-4" type="text" name="site_link" id="id_site_link" required
+                                placeholder="Website link" />
+                        </div>
+                    </div>
+
+                    <div class="my-3 d-flex form-group">
+                        {{ form.country.errors }}
+                        <div class="w-25 f-20 d-flex align-content-center  d-flex align-self-center">
+                            <label class="mb-0 pr-2" for="id_country">Country</label>
+                        </div>
+                        <div class="w-75">
+                            <input class="form-control py-4" type="text" name="country" id="id_country" required
+                                placeholder="Website link" />
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-end">
+                        <input class="form-control py-4 w-25" type="" name="next" value="">
+                        <button type="submit" class="py-3 f-24 font-weight-bold w-75 form-control h-100 btn-blue d-flex border-0 justify-content-center align-items-center">Upload
+                            new website</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="col-md-3"></div>
-
+    <div class="col-md-2"></div>
 </div>
+
 {% endblock content %}

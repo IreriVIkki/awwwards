@@ -30,7 +30,7 @@ class WebsitePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('name', 'landing_image',
-                  'screenshot_1', 'screenshot_2', 'screenshot_3', 'screenshot_4', 'description', 'site_link')
+                  'screenshot_1', 'screenshot_2', 'screenshot_3', 'screenshot_4', 'description', 'site_link', 'country')
 
 
 class LocationForm(forms.ModelForm):
@@ -48,7 +48,7 @@ class AddressForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        exclude = ['user', 'name', 'is_judge', 'is_pro',
+        exclude = ['user', 'is_judge', 'is_pro',
                    'is_chief', 'is_tribe', 'user_address']
         list_display = []
 
