@@ -18,6 +18,8 @@ class Location(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, related_name='profile')
     name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50, null=True)
+    last_name = models.CharField(max_length=50, null=True)
     profile_photo = models.ImageField(upload_to='images/', blank=True,)
     user_name = models.CharField(max_length=50, null=True)
     occupation = models.CharField(max_length=300, null=True)

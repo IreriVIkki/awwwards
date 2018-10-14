@@ -103,21 +103,11 @@
                         <div class="mx-1">
                             <button class="btn btn-sm badge-pill px-4 btn-outline-light">Jury votes</button>
                         </div>
-                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary mx-1">
-                            <img class="h-100 judge-btn" src="{% static 'img/person1.jpg' %}" alt="">
+                        {% for judge in judges %}
+                        <a href="/userdetails/{{ judge.id }}/{{ judge.username }}" class="md-icon d-flex justify-content-center rounded-circle border border-secondary mx-1">
+                            <img class="h-100 judge-btn" src="{{ judge.profile.profile_photo.url }}" alt="">
                         </a>
-                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary mx-1">
-                            <img class="h-100 judge-btn" src="{% static 'img/person2.jpg' %}" alt="">
-                        </a>
-                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary mx-1">
-                            <img class="h-100 judge-btn" src="{% static 'img/person3.jpg' %}" alt="">
-                        </a>
-                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary mx-1">
-                            <img class="h-100 judge-btn" src="{% static 'img/person5.jpeg' %}" alt="">
-                        </a>
-                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary mx-1">
-                            <img class="h-100 judge-btn" src="{% static 'img/person6.jpeg' %}" alt="">
-                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -151,11 +141,16 @@
                                     <div class="site-fade site-fade-out" id="fadeid{{ pod.id }}">
                                         <div class="h-100 p-3 d-flex flex-column">
                                             <div class="d-flex justify-content-end">
-                                                <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                                                <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-white-50 text-white-50">
                                                     <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
                                                         alt="">
                                                     {{ pod.likes.all | length }}</button>
                                                 <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
+                                            </div>
+                                            <div class="d-flex justify-content-center my-auto">
+                                                <a class="nav-link" href="/rate/post/{{ pod.id }}#rating-section">
+                                                    <button class="badge-pill btn btn-outline-success px-4 px-2">VOTE</button>
+                                                </a>
                                             </div>
                                             <div class="d-flex justify-content-end mt-auto">
                                                 <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
@@ -178,11 +173,12 @@
                         </div>
                         <div id="site-footer-box" class="container p-3 d-flex">
                             <div id="footer-left" class="d-flex align-items-center mr-auto">
-                                <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
+                                <a href="/userdetails/{{ pod.uploaded_by.id }}/{{ pod.uploaded_by.username }}" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
                                     <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
                                         alt="">
                                 </a>
-                                <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
+                                <a href="/userdetails/{{ pod.uploaded_by.id }}/{{ pod.uploaded_by.username }}" id="by-user"
+                                    class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
                                     <span class="pr-1">By </span>
                                     <span class="font-weight-bold">{{ pod.uploaded_by.profile.user_name }}</span>
                                 </a>

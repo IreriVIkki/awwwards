@@ -12,7 +12,9 @@ import datetime
 
 def home(request):
     post = Post.objects.first()
+    post_reviews = post.ratings.all()
     posts = Post.objects.all()
+    judges = list(set([judge.user for judge in post_reviews]))
     print(posts)
 
     average_usability = Rating.average_usability(post)
@@ -23,6 +25,7 @@ def home(request):
     average_rating = Rating.average_rating(post)
     context = {
         'posts': posts,
+        'judges': judges,
         'post': post,
         'average_usability_w': stringify_rating(average_usability)[0],     'average_usability_d': stringify_rating(average_usability)[1],
         'average_design_w': stringify_rating(average_design)[0],           'average_design_d': stringify_rating(average_design)[1],
@@ -59,26 +62,7 @@ def logout(request):
     return redirect('login')
 
 
-def profile(request):
-    user = get_object_or_404(User, id=request.user.id)
-    if not request.user.is_authenticated():
-        return redirect("login")
-    try:
-        profile = user.profile
-    except:
-        return redirect('edit_profile')
-
-    user = User.objects.get(pk=user.id)
-    posts = user.posts.all()
-    context = {
-        'user': user,
-        'posts': posts,
-        'profile': profile
-    }
-    return render(request, 'profile.html', context)
-
-
-def other_profile(request, user_id):
+def profile(request, user_id, username):
     user = get_object_or_404(User, id=user_id)
     if not request.user.is_authenticated():
         return redirect("login")
@@ -87,7 +71,8 @@ def other_profile(request, user_id):
     except:
         return redirect('edit_profile')
 
-    posts = user.posts.all()
+    user = User.objects.get(pk=user.id)
+    posts = Post.objects.all()
     context = {
         'user': user,
         'posts': posts,
@@ -166,12 +151,13 @@ def rate_website(request, post_id):
                 review.author = user
                 review.post = post
                 review.save()
-            return redirect(reverse('profile'))
+            return redirect(reverse('profile', args=(post_id,)))
         else:
             rf = RatePostForm()
             cf = ReviewCommentForm()
         print(judges)
 
+        # user_rating = from
         average_usability = Rating.average_usability(post)
         average_design = Rating.average_design(post)
         average_creativity = Rating.average_creativity(post)

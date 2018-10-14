@@ -48,7 +48,8 @@ class AddressForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        exclude = ['user', 'is_judge', 'is_pro', 'is_chief', 'is_tribe']
+        exclude = ['user', 'name', 'is_judge', 'is_pro',
+                   'is_chief', 'is_tribe', 'user_address']
         list_display = []
 
 

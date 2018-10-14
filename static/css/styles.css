@@ -1,3 +1,11 @@
+* {
+    font-family: "Hoefler Titling A",
+        "Hoefler Titling B",
+        "Times New Roman",
+        "Times",
+        serif;
+}
+
 /* Root styling */
 :root {
     --dark-grey: #434343;
@@ -8,6 +16,7 @@
 }
 
 /* on the fly */
+
 
 .rem-1 {
     height: 1rem;
@@ -40,13 +49,30 @@
     border-color: rgba(255, 255, 255, 0.136) !important;
 }
 
+.f-12 {
+    font-size: 12px;
+}
+
 .f-14 {
     font-size: 14px;
+}
+
+.f-16 {
+    font-size: 16px;
 }
 
 .f-24 {
     font-size: 24px;
 }
+
+.f-36 {
+    font-size: 36px;
+}
+
+.f-45 {
+    font-size: 45px;
+}
+
 
 .judge-rating {
     height: 40px;
@@ -57,6 +83,10 @@
     height: 50px;
     width: 50px;
     overflow: hidden;
+}
+
+.footer {
+    min-height: 60vh;
 }
 
 
@@ -90,6 +120,23 @@
     overflow: hidden;
 }
 
+.vw-center {
+    left: 50%;
+    position: absolute;
+}
+
+.xl-icon {
+    width: 110px;
+    height: 110px;
+    overflow: hidden;
+}
+
+.lg-icon {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+}
+
 .cus-col-md-4 {
     -ms-flex: 0 0 32%;
     flex: 0 0 32%;
@@ -100,18 +147,6 @@
     width: 16px;
     height: 16px;
     overflow: hidden;
-}
-
-.f-12 {
-    font-size: 12px;
-}
-
-.f-16 {
-    font-size: 16px;
-}
-
-.f-45 {
-    font-size: 45px;
 }
 
 .h-30-px {

@@ -3,13 +3,285 @@
 
 {% block content %}
 
+<section>
+    <div class="container-fluid px-0 c-darkgrey border-top border-dark text-white-50">
+        <section class="profile-langing">
+            <div class="px-5 py-5">
+                <div class="d-flex">
+                    <a class="ml-2 mb-0" href="https://{{ user.profile.facebook }}">
+                        <div class="rounded-circle judge-rating-ppic  mx-auto d-flex justify-content-center align-items-center btn-outline-white-50">
+                            <img class="w-50 h-50" src="{% static 'img/facebook-icon.png' %}" alt="">
+                        </div>
+                    </a>
+                    <a class="ml-2 mb-0" href="https://{{ user.profile.twitter }}">
+                        <div class="rounded-circle judge-rating-ppic  mx-auto d-flex justify-content-center align-items-center btn-outline-white-50">
+                            <img class="w-50 h-50" src="{% static 'img/twitter-icon.png' %}" alt="">
+                        </div>
+                    </a>
+                    <a class="ml-2 mb-0" href="https://{{ user.profile.linkedin }}">
+                        <div class="rounded-circle judge-rating-ppic  mx-auto d-flex justify-content-center align-items-center btn-outline-white-50">
+                            <img class="w-50 h-50" src="{% static 'img/linkedin-icon.png' %}" alt="">
+                        </div>
+                    </a>
+                    <a class="ml-2 mb-0" href="https://{{ user.profile.instagram }}">
+                        <div class="rounded-circle judge-rating-ppic  mx-auto d-flex justify-content-center align-items-center btn-outline-white-50">
+                            <img class="w-50 h-50" src="{% static 'img/instagram-icon.png' %}" alt="">
+                        </div>
+                    </a>
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-outline-white-50 badge-pill my-2 px-5">Following</button>
+                    {% else %}
+                    <button class="btn btn-outline-white-50 badge-pill my-2 px-5">Follow</button>
+                    {% endif %}
+                    {% if request.user.is_superuser %}
+                    <a class="ml-auto" href="http://127.0.0.1:8000/admin/">
+                        <button class="btn btn-outline-white-50 badge-pill my-2 px-5">Admin Page</button>
+                    </a>
+                    {% else %}
+                    {% if user.is_authenticated %}
+                    <button class="ml-auto btn btn-outline-white-50 badge-pill my-2 px-5">
+                        <span class="font-italic text-info pr-2">Active</span>
+                    </button>
+                    {% else %}
+                    <button class="ml-auto btn btn-outline-white-50 badge-pill my-2 px-5">
+                        <span class="font-italic text-info pr-2">Last seen</span>
+                        {{ request.user.last_login | date:"M d, Y" }}</button>
+                    {% endif %}
+                    {% endif %}
+                    <a class="ml-2 mb-0" href="{{ user.profile.website }}">
+                        <button class="btn btn-outline-white-50 badge-pill px-5 my-2">
+                            <span class="font-italic text-info pr-2">Visit Site</span>
+                        </button>
+                    </a>
+                </div>
+                <div class="text-center">
+                    <div class="rounded-circle xl-icon mx-auto my-2 d-flex justify-content-center">
+                        <img class="w-auto h-100" src="{{user.profile.profile_photo.url }}" alt="">
+                    </div>
+                    <div class="text-center">
+                        <h1 class="f-36 font-weight-bold ">{{ user.profile.user_name }}</h1>
+                    </div>
+                    <div class="text-center">
+                        <p class="mb-0 mx-5 px-5">
+                            {{ user.profile.occupation }} at
+                            {% if user.profile.company %}
+                            {{ user.profile.company }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <p class="mb-0 mx-5 px-5">
+                            {{ user.profile.bio }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="mb-5 container-fluid border-top border-dark">
+                <div class="mx-5">
+                    <div class="title py-5 d-flex">
+                        <div class="row-right d-flex mr-auto">
+                            <span class="f-16 light-grey font-weight-bold letter-space-1">Sites Of The Day</span>
+                            <span class="f-16 text-white-50 ml-2">Previous Winners</span>
+                        </div>
+                        <div class="row-left ml-auto d-flex">
+                            <span class="f-16 light-grey font-weight-bold letter-space-1">Mobile Excelence</span>
+                            <span class="f-16 text-white-50 ml-2">recorgonized by Google</span>
+                        </div>
+                    </div>
+                    <div id="row-content" class="row mX-0 mb-5 p-0 d-flex justify-content-between">
+
+
+                        {% for pod in posts %}
+
+                        <div class="cus-col-md-4 px-0" id="id{{ pod.id }}" onmouseover="getid(this.id);" onmouseout="outmouse(this.id);">
+                            <div id=" site-box" class="card card-bg ">
+                                <a href="/rate/post/{{ pod.id }}">
+                                    <div id="site-image-box" class="">
+                                        <div class="site-img">
+                                            <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
+                                            <div class="site-fade site-fade-out" id="fadeid{{ pod.id }}">
+                                                <div class="h-100 p-3 d-flex flex-column">
+                                                    <div class="d-flex justify-content-end">
+                                                        <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                                                            <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
+                                                                alt="">
+                                                            {{ pod.likes.all | length }}</button>
+                                                        <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
+                                                    </div>
+                                                    <div class="d-flex justify-content-end mt-auto">
+                                                        <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
+                                                            <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}"
+                                                                alt="">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div id="site-content-box" class="container p-3">
+                                    <div class="pb-4">
+                                        <a class="mb-0 text-white-50 nav-link pl-0" href="">{{ pod.name }}</a>
+                                    </div>
+                                    <div class="d-flex pb-4 border-bottom border-secondary">
+                                        <span class="text-secondary letter-space-1 f-12 mr-auto">From
+                                            {{pod.uploaded_from }}</span>
+                                        <span class="text-secondary letter-space-1 f-12">
+                                            {{pod.post_date | date:"M d,Y" }}</span>
+                                    </div>
+                                </div>
+                                <div id="site-footer-box" class="container p-3 d-flex">
+                                    <div id="footer-left" class="d-flex align-items-center mr-auto">
+                                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
+                                            <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
+                                                alt="">
+                                            <section class="user-posts">
+
+                                            </section>
+                                        </a>
+                                        <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
+                                            <span class="pr-1">By </span>
+                                            <span class="font-weight-bold">{{ pod.uploaded_by.profile.user_name }}</span>
+                                        </a>
+                                    </div>
+                                    <div id="footer-right">
+                                        <span class="btn badge-pill" id="HM"></span>
+                                        <span class="btn badge-pill" id="DEV"></span>
+                                        <span class="btn badge-pill" id="SOTD"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% if user.posts.all %}
+        <section>
+            <div class="mb-5 mb-5 container-fluid border-top border-dark">
+                <div class="mx-5">
+                    <div class="title py-5 d-flex">
+                        <div class="row-right d-flex mr-auto">
+                            <span class="f-16 light-grey font-weight-bold letter-space-1">Your Posts</span>
+                            <span class="f-16 text-white-50 ml-2">Website you have deemed worthy of being here!</span>
+                        </div>
+                        <div class="row-left ml-auto d-flex">
+                            <span class="f-16 light-grey font-weight-bold letter-space-1">{{ user.posts.all | length }}</span>
+                            <span class="f-16 text-white-50 ml-2">Websites posted</span>
+                        </div>
+                    </div>
+                    <div id="row-content" class="row m-0 mb-5 p-0 d-flex justify-content-between">
+
+
+                        {% for pod in user.posts.all %}
+
+                        <div class="cus-col-md-4 px-0" id="id{{ pod.id }}" onmouseover="getid(this.id);" onmouseout="outmouse(this.id);">
+                            <div id=" site-box" class="card card-bg ">
+                                <a href="/rate/post/{{ pod.id }}#rating-section">
+                                    <div id="site-image-box" class="">
+                                        <div class="site-img">
+                                            <img class="card-img-top img-hoverin" src="{{ pod.landing_image.url }}" alt="">
+                                            <div class="site-fade site-fade-out" id="fadeid{{ pod.id }}">
+                                                <div class="h-100 p-3 d-flex flex-column">
+                                                    <div class="d-flex justify-content-end">
+                                                        <button class="btn btn-sm badge-pill px-4 mx-2 btn-outline-light">
+                                                            <img class="rem-1 w-auto pr-2" src="{% static 'img/like-grey.png' %}"
+                                                                alt="">
+                                                            {{ pod.likes.all | length }}</button>
+                                                        <button class="ml-2 btn btn-sm btn-outline-secondary badge-pill">collect</button>
+                                                    </div>
+                                                    <div class="d-flex justify-content-end mt-auto">
+                                                        <button class="btn badge-pill p-0 btn-outline-secondary h-30-px">
+                                                            <img class="h-100 p-1" src="{% static 'img/share-arrow.png' %}"
+                                                                alt="">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div id="site-content-box" class="container p-3">
+                                    <div class="pb-4">
+                                        <a class="mb-0 text-white-50 nav-link pl-0" href="">{{ pod.name }}</a>
+                                    </div>
+                                    <div class="d-flex pb-4 border-bottom border-secondary">
+                                        <span class="text-secondary letter-space-1 f-12 mr-auto">From
+                                            {{pod.uploaded_from }}</span>
+                                        <span class="text-secondary letter-space-1 f-12">
+                                            {{pod.post_date | date:"M d,Y" }}</span>
+                                    </div>
+                                </div>
+                                <div id="site-footer-box" class="container p-3 d-flex">
+                                    <div id="footer-left" class="d-flex align-items-center mr-auto">
+                                        <a href="" class="md-icon d-flex justify-content-center rounded-circle border border-secondary">
+                                            <img class="h-100 judge-btn" src="{{ pod.uploaded_by.profile.profile_photo.url }}"
+                                                alt="">
+                                            <section class="user-posts">
+
+                                            </section>
+                                        </a>
+                                        <a id="by-user" class="pl-2 f-12 text-white-50 nav-link text-uppercase" href="">
+                                            <span class="pr-1">By </span>
+                                            <span class="font-weight-bold">{{ pod.uploaded_by.profile.user_name }}</span>
+                                        </a>
+                                    </div>
+                                    <div id="footer-right">
+                                        <span class="btn badge-pill" id="HM"></span>
+                                        <span class="btn badge-pill" id="DEV"></span>
+                                        <span class="btn badge-pill" id="SOTD"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        <section class="contact-info">
+            <div class="container-fliud px-0 card-bg mt-5 py-5 footer d-flex flex-column">
+                <div class="d-flex w-25 flex-column mx-auto">
+                    <h2 class="d-inline-flex">Contanct {{ user.profile.name }}</h2>
+
+                    If you would like to connect with {{ user.divrofile.name }}, email
+                    {{user.profile.email}} or call them at {{ user.profile.phone }}
+                    Add
+                    {% if user.profile.gender == 'Male' %}
+                    >him
+                    {% elif user.profile.gender is 'Female' %}her
+                    {% else %}them {% endif %} on social media with the links below
+                    <div class="d-inline">
+
+                        <a class="text-primary" href="https://{{ user.profile.linkedin }}"> LinkedIn</a>,
+                        <a class="text-twitter" href="https://{{ user.profile.twitter }}">Twitter</a>,
+                        <a class="text-primary" href="https://{{ user.profile.facebook }}">Facebook</a>
+                        or
+                        <a class="text-primary" href="https://{{ user.profile.instagram }}">Instagram</a>
+                    </div>
+                </div>
+
+                <p>
+
+                </p>
+            </div>
+        </section>
+    </div>
+
+</section>
+
+
 <div class="row p-0 m-0">
 
     <div class="col-lg-6 col-md-6 col-sm-6">
 
         <h4>Account Details</h4>
 
-        {% if user.is_superuser %}
+        {% if request.user.is_superuser %}
 
         <a href="http://127.0.0.1:8000/admin/">admin</a>
 
