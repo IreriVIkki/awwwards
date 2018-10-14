@@ -168,4 +168,4 @@ DATABASES = {
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
-ALLOWED_HOSTS = ['ireriawwwardsclone.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['ireriawwwardsclone.herokuapp.com', 'localhost', '127.0.0.1']
