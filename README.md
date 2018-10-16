@@ -1,4 +1,4 @@
-# **Image Galery IP**
+# **Awwwards Clone IP**
 
 This project has been developed by:
 
@@ -20,22 +20,31 @@ Django framework has been used in the development of this project and the langua
 
 ## Project Description
 
-This is a project where a user can simply visit the website with no login required and view the images that i love.
+This is a project where once the user logs in, they can submit a website and have other people rate it. They can also create their own profile and be able to rate other peoples websites and review them.
+Users, can also move through the ranks by having their website voted as the site of the day. They can upgrade from user to jury once they rate a website accurately 
 
--   Users can click on any image to see more details on the image in a modal
+-   Users can click on website in the home page and go to the review page where they can rate and review the website
 
--   while on the modal users can click on the image to **toggle** between and expanded and default size of the image
+-   Users can click on a user icon and go to their profile page where they can see all the websites another user has posted liked and collected
 
--   Users can click on any of the **category** buttons on the project to view other images in the same category as the one they are viewing at the moment
+-   Users can click on their own profile icon and go to their profile page where they can see all the websites another user has posted liked and collected
 
--   Users can **search** for images in the website and see all images that contain the term thery searched for in the search bar
+-   Users can like other websites
+
+-   Users can add other websites to their collections
+
+-   a future objective of the website is to have Users click on any of the **category** buttons on the project to view other images in the same category as the one they are viewing at the moment
+
+-   Users can **search** for websites and see all the details about the website and its ratings
+
 
 -   If the user searches for an item **that does not exist** they will be redirected to the homepage a a king message will be shown telling them what they did wrong
 
 ## Set up instructions
 
-to start going through the images, simply click on this [link](hhttps://github.com/IreriVIkki/blogsIP/ "IV-Blogs.com") to visit the website, or click here to visit the [Git Hub](hhttps://github.com/IreriVIkki/blogsIP/ "IV-Blogs.com") repository for the project.
+to start going through the images, simply click on this [link](https://ireriawwwardsclone.herokuapp.com/ "reriawwwardsclone.herokuapp.com") to visit the website, or click here to visit the [Git Hub](hhttps://github.com/IreriVIkki/awwwards/ "IA-Blogs.com") repository for the project.
 
 ## copyright and license
+
 
 [Copyright@MoringaSchool]() 2018
